@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useLocation, Link , Redirect } from 'react-router-dom';
 import LoadingIndicator from "@magento/venia-ui/lib/components/LoadingIndicator";
 import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import { clearCartDataFromCache } from '@magento/peregrine/lib/Apollo/clearCartDataFromCache';
 import defaultClasses from './eway.css';
+
+const CREATE_CART = gql`
+  mutation createCart($guestCartId: String) {
+    cartId: createEmptyCart(input: { cart_id: $guestCartId })
+  }
+`;
 
 const FINALIZE_PAYMENT = gql`
   mutation finalizePayment($cartId: String!, $accessCode: String!) {
@@ -67,7 +74,9 @@ const FINALIZE_PAYMENT = gql`
 
 const Eway = () => {
     const location = useLocation();
-    const [{ cartId }] = useCartContext();
+    const [{ cartId }, { removeCart, createCart }] = useCartContext();
+    const apolloClient = useApolloClient();
+    const [fetchCartId] = useMutation(CREATE_CART);
     const [accessCode, setAccessCode] = useState(null);
     const [finalizePayment, { loading, error, data }] = useMutation(FINALIZE_PAYMENT);
     const [orderId, setOrderId] = useState(null);
@@ -101,6 +110,19 @@ const Eway = () => {
                 setOrderSuccess(true);
                 setOrderData(order_data);
                 sessionStorage.setItem('order_id', order_id);
+
+                // Clear cart from Apollo cache so mini cart count resets to 0
+                const clearCart = async () => {
+                    try {
+                        await removeCart();
+                        await clearCartDataFromCache(apolloClient);
+                        await createCart({ fetchCartId });
+                    } catch (e) {
+                        console.error('Failed to reset cart after eWay payment', e);
+                    }
+                };
+                clearCart();
+
                 const timer = setInterval(() => {
                     setCountdown(prev => {
                         if (prev <= 1) {
@@ -116,7 +138,7 @@ const Eway = () => {
                 setErrorMessage(message || 'An error occurred while processing your payment.');
             }
         }
-    }, [data]);
+    }, [data, removeCart, createCart, fetchCartId, apolloClient]);
 
     if (loading) {
         return (
