@@ -1,0 +1,49 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import mergeOperations from '@magento/peregrine/lib/util/shallowMerge';
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+
+import DEFAULT_OPERATIONS from './ewayrapid.gql';
+
+export const useEwayrapid = props => {
+    const operations = mergeOperations(DEFAULT_OPERATIONS, props.operations);
+    const { getEwayConfigQuery, setPaymentMethodOnCartMutation } = operations;
+
+    const [{ cartId }] = useCartContext();
+    const { data } = useQuery(getEwayConfigQuery);
+    const { resetShouldSubmit, onPaymentSuccess, onPaymentError, refetchCart } = props;
+
+    const [tokenAction] = useState('new');
+    const [tokenId] = useState('1');
+    const [accessCode] = useState('ewaytest123'); // default for now
+
+    const [mutationError, setMutationError] = useState(null);
+
+    const [updatePaymentMethod, { error: mutationErr, loading: mutationLoading }] =
+        useMutation(setPaymentMethodOnCartMutation);
+
+    const setPaymentMethod = useCallback(async () => {
+        try {
+            await updatePaymentMethod({
+                variables: { cartId, tokenAction, tokenId, accessCode }
+            });
+            await refetchCart?.();
+            onPaymentSuccess();
+        } catch (err) {
+            setMutationError(err);
+            onPaymentError();
+        }
+    }, [updatePaymentMethod, cartId, tokenAction, tokenId, accessCode, refetchCart, onPaymentSuccess, onPaymentError]);
+
+    const onBillingAddressChangedError = useCallback(() => {
+        resetShouldSubmit();
+    }, [resetShouldSubmit]);
+
+    return {
+        clientId: data?.storeConfig?.payment_ewayrapid_sandbox_encryption_key,
+        connectionType: data?.storeConfig?.payment_ewayrapid_connection_type,
+        onBillingAddressChangedError,
+        setPaymentMethod,
+        mutationError
+    };
+};

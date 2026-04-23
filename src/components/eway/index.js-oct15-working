@@ -1,0 +1,67 @@
+import React, { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import { useLocation } from 'react-router-dom';
+
+// GraphQL Mutation
+const FINALIZE_PAYMENT = gql`
+  mutation finalizePayment($cartId: Int!, $accessCode: String!) {
+    ewayRedirectSuccess(cart_id: $cartId, access_code: $accessCode) {
+      success
+      message
+    }
+  }
+`;
+
+const Eway = () => {
+    const location = useLocation();
+    const [cartId, setCartId] = useState(null);
+    const [accessCode, setAccessCode] = useState(null);
+    const [finalizePayment, { loading, error, data }] = useMutation(FINALIZE_PAYMENT);
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const accessCodeFromUrl = url.searchParams.get('AccessCode');
+        const path = window.location.pathname;
+        const cartIdMatch = path.match(/cart_id\/(\d+)/);
+
+        if (cartIdMatch) {
+            const cartIdFromUrl = cartIdMatch[1];
+            setCartId(cartIdFromUrl);
+            setAccessCode(accessCodeFromUrl);
+        }
+    }, [location]);
+
+    const handleFinalize = () => {
+        if (!cartId || !accessCode) {
+            alert('Missing cartId or accessCode');
+            return;
+        }
+
+        finalizePayment({
+            variables: {
+                cartId: parseInt(cartId),
+                accessCode: accessCode,
+            },
+        });
+    };
+
+    useEffect(() => {
+        if (cartId && accessCode && !loading) {
+            handleFinalize();
+        }
+    }, [cartId, accessCode, loading]);
+
+    if (loading) return <div><p>Processing payment, please wait...</p></div>;
+    if (error) return <div><p>Error: {error.message}</p></div>;
+
+    if (data && data.ewayRedirectSuccess.success) {
+        window.location.href = '/checkout';
+    } else if (data && data.ewayRedirectSuccess.message) {
+        alert('Error: ' + data.ewayRedirectSuccess.message);
+    }
+
+    return <div><p>Processing payment, please wait...</p></div>;
+};
+
+export default Eway;

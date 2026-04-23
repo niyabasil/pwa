@@ -1,0 +1,106 @@
+import React, { useState, useEffect } from 'react';
+import { shape, string } from 'prop-types';
+import { useIntl } from 'react-intl';
+import { usePostcode } from '@magento/peregrine/lib/talons/Postcode/usePostcode';
+
+import { useStyle } from '@magento/venia-ui/lib/classify';
+import Field from '@magento/venia-ui/lib/components/Field';
+import TextInput from '@magento/venia-ui/lib/components/TextInput';
+import defaultClasses from '@magento/venia-ui/lib/components/Postcode/postcode.module.css';
+import { gql, useMutation } from '@apollo/client';
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import { GET_CHECKOUT_DETAILS } from '@amasty/one-step-checkout/src/talons/CheckoutPage/osc.gql';
+import { useQuery } from '@apollo/client';
+import { useShippingMethod } from '@amasty/one-step-checkout/src/talons/ShippingMethod/useShippingMethod'; 
+
+
+const UPDATE_POSTCODE_MUTATION = gql`
+    mutation UpdatePostcode($cartId: String!, $postcode: String!) {
+        updatePostcodeInQuote(cart_id: $cartId, postcode: $postcode) {
+            message
+        }
+    }
+`;
+
+const Postcode = props => {
+    const { classes: propClasses, fieldInput, label, ...inputProps } = props;
+
+    const classes = useStyle(defaultClasses, propClasses);
+    const postcodeProps = {
+        classes,
+        ...inputProps
+    };
+
+    const { formatMessage } = useIntl();
+    const { isLoading } = useShippingMethod();
+    const [postcode, setPostcode] = useState('');
+    const [{ cartId }] = useCartContext();
+    const [updatePostcodeMutation] = useMutation(UPDATE_POSTCODE_MUTATION);
+    const [postcodeUpdated, setPostcodeUpdated] = useState(false);
+
+    useEffect(() => {
+        if (postcodeUpdated && isLoading) {
+            alert('Still loading shipping methods after postcode update');
+            setPostcodeUpdated(false); 
+        }
+    }, [isLoading, postcodeUpdated]);
+
+    const handleChange = async e => {
+        const value = e.target.value;
+        setPostcode(value);
+        if (value.length >= 4 && cartId) {
+            try {
+                const { data } = await updatePostcodeMutation({
+                    variables: {
+                        cartId,
+                        postcode: value
+                    }
+                });
+               setPostcodeUpdated(true);
+            } catch (error) {
+                alert('Error updating postcode: ' + error.message);
+                setPostcodeUpdated(false);
+            }
+        }
+    };
+
+    const fieldLabel =
+        label ||
+        formatMessage({
+            id: 'postcode.label',
+            defaultMessage: 'ZIP / Postal Code'
+        });
+
+    usePostcode({ fieldInput });
+
+    return (
+        <Field
+            id={classes.root}
+            label={fieldLabel}
+            classes={{ root: classes.root }}
+        >
+            <TextInput
+                {...postcodeProps}
+                field={fieldInput}
+                id={classes.root}
+                onChange={handleChange}
+                disabled={isLoading}
+            />
+             {isLoading && <div className={classes.loading}>Loading shipping methods...</div>}
+        </Field>
+    );
+};
+
+export default Postcode;
+
+Postcode.defaultProps = {
+    fieldInput: 'postcode'
+};
+
+Postcode.propTypes = {
+    classes: shape({
+        root: string
+    }),
+    fieldInput: string,
+    label: string
+};

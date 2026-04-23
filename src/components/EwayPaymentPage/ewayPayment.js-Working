@@ -1,0 +1,204 @@
+import React, { useState, useEffect } from 'react';
+import { useStyle } from '@magento/venia-ui/lib/classify';
+import { shape, string, bool, func } from 'prop-types';
+import BillingAddress from '@magento/venia-ui/lib/components/CheckoutPage/BillingAddress';
+import { useEwayrapid } from '@magento/peregrine/lib/talons/EwayPaymentPage/useEwayrapid.js';
+import { FormattedMessage } from 'react-intl';
+import { gql, useMutation } from '@apollo/client';
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import { SET_PAYMENT_METHOD_ON_CART } from '@magento/peregrine/lib/talons/EwayPaymentPage/ewayrapid.gql.js';
+import {
+    stripeCardNumberValidation,
+    stripeCardExpirValidation,
+    textWithSpacesOnly,
+    minLength
+  } from "./validation";
+
+const ewayPayment = props => {
+   const [{ cartId }] = useCartContext();
+   const {
+        resetShouldSubmit,
+        onPaymentSuccess,
+        onPaymentError,
+        currentSelectedPaymentMethod
+    } = props;
+    const {
+        clientId,
+        onBillingAddressChangedError,
+        onBillingAddressChangedSuccess,
+        handleCcName,
+        handleCcNumber,
+        handleCcExpMonth,
+        handleCcExpYear,
+        handleCcCid
+    } = useEwayrapid({
+        resetShouldSubmit,
+        onPaymentSuccess,
+        onPaymentError,
+        currentSelectedPaymentMethod
+    });
+
+    useEffect(() => {
+        if (!document.querySelector('script[src="https://secure.ewaypayments.com/scripts/eCrypt.min.js"]')) {
+            const script = document.createElement("script");
+            script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
+            document.body.appendChild(script);
+        }
+        if (!document.querySelector('script[src="https://code.jquery.com/jquery-2.1.3.min.js"]')) {
+            const jsscript = document.createElement("script");
+            jsscript.src = "https://code.jquery.com/jquery-2.1.3.min.js";
+            document.body.appendChild(jsscript);
+        }
+        return () => {
+            const existingScript = document.querySelector('script[src="https://secure.ewaypayments.com/scripts/eCrypt.min.js"]');
+            if (existingScript) {
+                document.body.removeChild(existingScript);
+            }
+            const existingJsscript = document.querySelector('script[src="https://code.jquery.com/jquery-2.1.3.min.js"]');
+            if (existingJsscript) {
+                document.body.removeChild(existingJsscript);
+            }
+        };
+    }, []);
+
+    const [cardNumber, setCardNumber] = useState("");
+    const [cardError, setcardError] = useState("");
+    const [cardCvn, setCardCvn] = useState("");
+    const [cardName, setCardName] = useState("");
+    const [cardDate, setCardDate] = useState("");
+    const [setPaymentMethodOnCart, { loading, error }] = useMutation(SET_PAYMENT_METHOD_ON_CART, {
+        onError: (err) => alert('GraphQL Error:', err),
+        onCompleted: (data) => alert('Mutation Success:', data),
+    });
+
+    const handleCardNumberChange = (event) => {
+        setCardNumber(event.target.value);
+        try {
+            let errorText = stripeCardNumberValidation(event.target.value);
+            setcardError(errorText);
+            if (window.eCrypt) {
+                let encryptCardNo = window.eCrypt.encryptValue(event.target.value);
+                handleCcNumber(encryptCardNo);
+            }
+        } catch (error) {
+            alert('Card Number Not Encrypted');
+        }
+    };
+
+    const handleCardCvnChange = (event) => {
+        try {
+            setCardCvn(event.target.value);
+            if (window.eCrypt) {
+                let encryptCvn = window.eCrypt.encryptValue(cardCvn);
+            }
+        } catch (error) {
+            alert('Card CVN Not Encrypted');
+        }
+    };
+
+    const handleCardName = (event) => {
+        setCardName(event.target.value);
+        handleCcName(event.target.value);
+    };
+
+    const handleDateChange = (event) => {
+        setCardDate(event.target.value);
+    };
+
+    const handleNumberBlur = () => {
+        try {
+            if (window.eCrypt) {
+                let encryptCardNo = window.eCrypt.encryptValue(cardNumber);
+                //setCardNumber(encryptCardNo);
+                handleCcNumber(encryptCardNo);
+            }
+        } catch (error) {
+            alert('Card Number Not Encrypted');
+        }
+    };
+
+    
+    const handleCvnBlur = () => {
+        try {
+            if (window.eCrypt) {
+                let encryptCvn = window.eCrypt.encryptValue(cardCvn);
+                // setCardCvn(encryptCvn);
+                handleCcCid(encryptCvn);
+            }
+        } catch (error) {
+            alert('Error encrypting CVN:', error);
+        }
+    };
+    
+    const handleDcBlur = () => {
+        const [expMonth, expYear] = cardDate.split('/').map(val => parseInt(val, 10));
+        handleCcExpMonth(expMonth);
+        handleCcExpYear(expYear);
+    };
+
+    const formatClientId = clientId ? clientId : props.clientId;
+
+    return (
+        <div className={"eway-pay"}>
+            <BillingAddress
+                resetShouldSubmit={props.resetShouldSubmit}
+                shouldSubmit={props.shouldSubmit}
+                onBillingAddressChangedError={onBillingAddressChangedError}
+                onBillingAddressChangedSuccess={onBillingAddressChangedSuccess}
+            />
+            <form className="eway-credit-cards" data-eway-encrypt-key={formatClientId}>
+                <label>
+                    Name:
+                    <input
+                        type="text"
+                        name="card_name"
+                        value={cardName}
+                        onChange={handleCardName}
+                    />
+                </label><br/>
+                <label>
+                    Card Number:
+                    <input
+                        type="text"
+                        name="card_number"
+                        value={cardNumber}
+                        onChange={handleCardNumberChange}
+                        onBlur={handleNumberBlur}
+                    />
+                </label><br/>
+                <span style={{ color: 'red' }}>{cardError}</span>
+                <label>
+                    Expiration Date (MM/YY):
+                    <input
+                        type="text"
+                        name="expiration"
+                        value={cardDate}
+                        onChange={handleDateChange}
+                        onBlur={handleDcBlur}
+                    />
+                </label><br/>
+                <label>
+                    CVN:
+                    <input
+                        type="text"
+                        name="card_cvn"
+                        value={cardCvn}
+                        onChange={handleCardCvnChange}
+                        onBlur={handleCvnBlur}
+                    />
+                </label><br/>
+            </form>
+        </div>
+    );
+};
+
+ewayPayment.propTypes = {
+    clientId: string,
+    shouldSubmit: bool.isRequired,
+    onPaymentSuccess: func,
+    onPaymentReady: func,
+    onPaymentError: func,
+    resetShouldSubmit: func.isRequired
+};
+
+export default ewayPayment;

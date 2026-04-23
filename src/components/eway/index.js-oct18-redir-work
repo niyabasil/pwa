@@ -1,0 +1,77 @@
+import React, { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import { useLocation } from 'react-router-dom';
+import LoadingIndicator from "@magento/venia-ui/lib/components/LoadingIndicator";
+
+// GraphQL Mutation
+const FINALIZE_PAYMENT = gql`
+  mutation finalizePayment($cartId: Int!, $accessCode: String!) {
+    ewayRedirectSuccess(cart_id: $cartId, access_code: $accessCode) {
+      success
+      message
+      order_id
+    }
+  }
+`;
+
+const Eway = () => {
+    const location = useLocation();
+    const [cartId, setCartId] = useState(null);
+    const [accessCode, setAccessCode] = useState(null);
+    const [finalizePayment, { loading, error, data }] = useMutation(FINALIZE_PAYMENT);
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const accessCodeFromUrl = url.searchParams.get('AccessCode');
+        const path = window.location.pathname;
+        const cartIdMatch = path.match(/cart_id\/(\d+)/);
+
+        if (cartIdMatch) {
+            const cartIdFromUrl = cartIdMatch[1];
+            setCartId(cartIdFromUrl);
+            setAccessCode(accessCodeFromUrl);
+        }
+    }, [location]);
+
+    useEffect(() => {
+        if (cartId && accessCode) {
+            finalizePayment({
+                variables: {
+                    cartId: parseInt(cartId, 10),
+                    accessCode: accessCode,
+                },
+            });
+        }
+    }, [cartId, accessCode, finalizePayment]);
+
+    if (loading) {
+        return (
+            <LoadingIndicator>
+                <div><p>Processing Eway order and payment, please wait...</p></div>
+            </LoadingIndicator>
+        );
+    }
+
+    if (error) {
+        return <div><p>Error: {error.message}</p></div>;
+    }
+
+    if (data) {
+        const { success, message, order_id } = data.ewayRedirectSuccess;
+        if (success) {
+            alert(accessCode);
+            window.location.href = `/checkout/eway/success?order_id=${order_id}`;
+        } else {
+            alert('Error: ' + message);
+        }
+    }
+
+    return (
+        <div>
+            <p>Finalizing payment...</p>
+        </div>
+    );
+};
+
+export default Eway;

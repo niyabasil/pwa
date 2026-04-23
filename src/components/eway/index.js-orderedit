@@ -1,0 +1,206 @@
+import React, { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import { useLocation, Link } from 'react-router-dom';
+import LoadingIndicator from "@magento/venia-ui/lib/components/LoadingIndicator";
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import {mergeClasses} from '@magento/venia-ui/lib/classify';
+import {object, shape, string} from 'prop-types';
+import {useParams} from 'react-router';
+import {StoreTitle} from "@magento/venia-ui/lib/components/Head";
+import {FormattedMessage, useIntl} from "react-intl";
+import ItemsReview from "@magento/venia-ui/lib/components/CheckoutPage/ItemsReview";
+import confirmationPageClasses
+    from "@magento/venia-ui/lib/components/CheckoutPage/OrderConfirmationPage/orderConfirmationPage.module.css";
+import {useSuccessPage} from "../../talons/useSuccessPage";
+import CreateAccount from "@magento/venia-ui/lib/components/CheckoutPage/OrderConfirmationPage/createAccount";
+import { Redirect } from 'react-router-dom';
+import defaultClasses from './eway.css';
+
+// GraphQL Mutation
+// const FINALIZE_PAYMENT = gql`
+//   mutation finalizePayment($cartId: String!, $accessCode: String!) {
+//     ewayRedirectSuccess(cart_id: $cartId, access_code: $accessCode) {
+//       success
+//       message
+//       order_id
+//       order_data
+//     }
+//   }
+// `;
+
+const FINALIZE_PAYMENT = gql`
+  mutation finalizePayment($cartId: String!, $accessCode: String!) {
+    ewayRedirectSuccess(cart_id: $cartId, access_code: $accessCode) {
+      success
+      message
+      order_id
+      order_data {
+        shipping_address {
+          first_name
+          last_name
+          street
+          city
+          region
+          postcode
+          country
+          phone
+        }
+        items {
+          item_id
+          product_name
+          sku
+          quantity_ordered
+          price
+          row_total
+        }
+      }
+    }
+  }
+`;
+
+
+const Eway = props => {
+    const location = useLocation();
+    // const [cartId, setCartId] = useState(null);
+    const [{ cartId }] = useCartContext();
+    const [accessCode, setAccessCode] = useState(null);
+    const [finalizePayment, { loading, error, dataPayment }] = useMutation(FINALIZE_PAYMENT);
+    const [orderId, setOrderId] = useState(null);
+    const [orderSuccess, setOrderSuccess] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const {order: orderNumber, maskedId} = useParams();
+    const {formatMessage} = useIntl();
+    // defaultClasses, 
+    const classes = mergeClasses(defaultClasses , props.classes  , confirmationPageClasses);
+    const talonProps = useSuccessPage({
+        orderNumber,
+        maskedId
+    });
+
+   // alert(cartId);
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const accessCodeFromUrl = url.searchParams.get('AccessCode');
+        // const path = window.location.pathname;
+        // const cartIdMatch = path.match(/cart_id\/(\d+)/);
+
+        // if (cartIdMatch) {
+        //     const cartIdFromUrl = cartIdMatch[1];
+        //     setCartId(cartIdFromUrl);
+           
+        // }
+         setAccessCode(accessCodeFromUrl);
+    }, [location]);
+
+    useEffect(() => {
+        if (cartId && accessCode) {
+            finalizePayment({
+                variables: {
+                    cartId,
+                    accessCode: accessCode,
+                },
+            });
+        }
+    }, [cartId, accessCode, finalizePayment]);
+
+    useEffect(() => {
+        if (dataPayment) {
+            const { success, message, order_id } = dataPayment.ewayRedirectSuccess;
+            if (success) {
+                setOrderId(order_id);
+                setOrderSuccess(true);
+                sessionStorage.setItem('order_id', order_id);
+            } else {
+                setOrderSuccess(false);
+                setErrorMessage(message || 'An error occurred while processing your payment.');
+            }
+        }
+    }, [dataPayment]);
+
+    const commonComponent = (
+        <div className={classes.root}>
+            <StoreTitle>
+                {formatMessage({
+                    id: 'checkoutPage.titleReceipt',
+                    defaultMessage: 'Receipt'
+                })}
+            </StoreTitle>
+            <div className={classes.mainContainer}>
+                <h2 className={classes.heading}>
+                    <FormattedMessage
+                        id={'checkoutPage.thankYou'}
+                        defaultMessage={'Thank you for your order!'}
+                    />
+                </h2>
+                <div className={classes.orderNumber}>
+                    <FormattedMessage
+                        id={'checkoutPage.orderNumber'}
+                        defaultMessage={'Order Number'}
+                        values={{orderNumber}}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+
+    const {flatData,  isSignedIn, isLoading, hasError} = talonProps;
+
+    if (hasError) {
+        return <Redirect to="/"/>;
+    }
+
+
+    if (loading) {
+        return (
+            <LoadingIndicator>
+                <div><p>Processing your order and payment, please wait...</p></div>
+            </LoadingIndicator>
+        );
+    }
+
+    if (error) {
+        return <div><p>Error: {error.message}</p></div>;
+    }
+
+    const {
+        city,
+        country,
+        email,
+        firstname,
+        lastname,
+        postcode,
+        region,
+        shippingMethod,
+        street
+    } = flatData;
+
+   
+
+    return (
+        <div>
+            {orderSuccess ? (
+                <>
+                    <h1 style={h1Style}>Thank you for your order!</h1>
+                    <h2 style={h1Style}>
+                        {orderId ? (
+                            <>Your Order ID: <Link to="/order-history">00000{orderId}</Link></>
+                        ) : (
+                            "Order ID not found."
+                        )}
+                    </h2>
+                   
+                </>
+            ) : (
+                <div><p>Error: {errorMessage}</p></div>
+            )}
+        </div>
+    );
+};
+
+const h1Style = { margin: "1rem", textAlign: 'center', fontSize: '24px', color: '#333' };
+
+
+
+export default Eway;

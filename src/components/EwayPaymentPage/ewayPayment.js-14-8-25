@@ -1,0 +1,99 @@
+import React, { useState, useEffect } from 'react';
+import { useStyle } from '@magento/venia-ui/lib/classify';
+import { shape, string, bool, func } from 'prop-types';
+import BillingAddress from '@magento/venia-ui/lib/components/CheckoutPage/BillingAddress';
+import { useEwayrapid } from '@magento/venia-concept/packages/@eway/eway/src/talons/useEwayrapid.js';
+import { FormattedMessage } from 'react-intl';
+import { gql, useMutation } from '@apollo/client';
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import { SET_PAYMENT_METHOD_ON_CART } from '@magento/venia-concept/packages/@eway/eway/src/talons/ewayrapid.gql.js';
+import {
+    stripeCardNumberValidation,
+    stripeCardExpirValidation,
+    textWithSpacesOnly,
+    minLength
+} from "./validation";
+import  defaultClasses from  './ewayPayment.css';
+import { useToasts } from '@magento/peregrine';
+import ToastContainer from '@magento/venia-ui/lib/components/ToastContainer';
+import Icon from '@magento/venia-ui/lib/components/Icon';
+import { useIntl } from 'react-intl';
+import {
+    AlertCircle as AlertCircleIcon,
+    CloudOff as CloudOffIcon,
+    Wifi as WifiIcon
+} from 'react-feather';
+
+const OnlineIcon = <Icon src={WifiIcon} attrs={{ width: 18 }} />;
+const OfflineIcon = <Icon src={CloudOffIcon} attrs={{ width: 18 }} />;
+const ErrorIcon = <Icon src={AlertCircleIcon} attrs={{ width: 18 }} />;
+
+const ewayPayment = props => {
+    const classes = useStyle(defaultClasses, props.classes);
+    const [{ cartId }] = useCartContext();
+    const {
+        resetShouldSubmit,
+        onPaymentSuccess,
+        onPaymentError,
+        currentSelectedPaymentMethod
+    } = props;
+    const {
+        clientId,
+        connectionType,
+        onBillingAddressChangedError,
+        onBillingAddressChangedSuccess,
+        mutationError 
+    } = useEwayrapid({
+        resetShouldSubmit,
+        onPaymentSuccess,
+        onPaymentError,
+        currentSelectedPaymentMethod
+    });
+    const [, { addToast }] = useToasts();
+    
+    const [setPaymentMethodOnCart, { loading, error }] = useMutation(SET_PAYMENT_METHOD_ON_CART, {
+        onError: (err) => alert('GraphQL Error:', err),
+        onCompleted: (data) => alert('Mutation Success:', data),
+        variables: {
+            cartId
+        },
+    });
+
+
+    const formatClientId = clientId ? clientId : props.clientId;
+    const connection = connectionType ? connectionType : props.connectionType;
+   
+    return (
+        <div className={classes.ewayExt}>
+            {mutationError && (
+                <div className={classes.errorBox}>
+                    <FormattedMessage
+                        id="ewayPayment.error"
+                        defaultMessage="There was an error processing your payment."
+                        // values={{ error: mutationError.message}}
+                    />
+                </div>
+            )}
+            
+            <BillingAddress
+                resetShouldSubmit={props.resetShouldSubmit}
+                shouldSubmit={props.shouldSubmit}
+                onBillingAddressChangedError={onBillingAddressChangedError}
+                onBillingAddressChangedSuccess={onBillingAddressChangedSuccess}
+            />
+            <p>This payment will redirect you to the payment page.</p>
+        </div>
+    );
+};
+
+ewayPayment.propTypes = {
+    clientId: string,
+    connectionType:string,
+    shouldSubmit: bool.isRequired,
+    onPaymentSuccess: func,
+    onPaymentReady: func,
+    onPaymentError: func,
+    resetShouldSubmit: func.isRequired
+};
+
+export default ewayPayment;

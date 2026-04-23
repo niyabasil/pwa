@@ -1,0 +1,124 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import mergeOperations from '@magento/peregrine/lib/util/shallowMerge';
+import { useCartContext } from '@magento/peregrine/lib/context/cart';
+
+import DEFAULT_OPERATIONS from './ewayrapid.gql';
+
+/**
+ * Talon to handle checkmo payment.
+ *
+ * @param {Boolean} props.shouldSubmit boolean value which represents if a payment nonce request has been submitted
+ * @param {Function} props.onPaymentSuccess callback to invoke when the a payment nonce has been generated
+ * @param {Function} props.onPaymentError callback to invoke when component throws an error
+ * @param {Function} props.resetShouldSubmit callback to reset the shouldSubmit flag
+ * @param {DocumentNode} props.operations.getCheckmoConfigQuery query to fetch config from backend
+ * @param {DocumentNode} props.operations.setPaymentMethodOnCartMutation mutation to set checkmo as payment
+ *
+ * @returns {
+ *  payableTo: String,
+ *  mailingAddress: String,
+ *  onBillingAddressChangedError: Function,
+ *  onBillingAddressChangedSuccess: Function
+ * }
+ */
+export const useEwayrapid = props => {
+    const operations = mergeOperations(DEFAULT_OPERATIONS, props.operations);
+
+    const {
+        getEwayConfigQuery,
+        setPaymentMethodOnCartMutation
+    } = operations;
+    const {currentSelectedPaymentMethod: selectedMethod} = props;
+    const [{ cartId }] = useCartContext();
+    const { data, loading, error } = useQuery(getEwayConfigQuery);
+    const { resetShouldSubmit, onPaymentSuccess, onPaymentError } = props;
+    const [tokenAction, setTokenAction] = useState(null);
+    const [tokenId, setTokenId] = useState(null);
+    const [accessCode, setAccessCode] = useState(null);
+    const [mutationError, setMutationError] = useState(null);
+    const [
+        updatePaymentMethod,
+        {
+            error: paymentMethodMutationError,
+            called: paymentMethodMutationCalled,
+            loading: paymentMethodMutationLoading
+        }
+    ] = useMutation(setPaymentMethodOnCartMutation);
+
+    /**
+     * This function will be called if cant not set address.
+     */
+    const onBillingAddressChangedError = useCallback(() => {
+        resetShouldSubmit();
+    }, [resetShouldSubmit]);
+
+    const handleTokenAction = useCallback(
+        value => {
+            setCcCid(value);
+        },
+        [setTokenAction]
+    );
+    const handleTokenId = useCallback(
+        value => {
+            setCcCid(value);
+        },
+        [setTokenId]
+    );
+    const handleAccessCode = useCallback(
+        value => {
+            setCcCid(value);
+        },
+        [setAccessCode]
+    );
+
+
+    /**
+     * This function will be called if address was successfully set.
+     * original
+     */
+    const onBillingAddressChangedSuccess = useCallback(() => {
+        updatePaymentMethod({
+            variables: { cartId, tokenAction, tokenId, accessCode }
+        });
+    }, [updatePaymentMethod, cartId, tokenAction, tokenId, accessCode]);
+   
+   
+
+    useEffect(() => {
+        const paymentMethodMutationCompleted =
+            paymentMethodMutationCalled && !paymentMethodMutationLoading;
+
+        if (paymentMethodMutationCompleted && !paymentMethodMutationError) {
+            setMutationError(null);
+            onPaymentSuccess();
+        }
+
+        if (paymentMethodMutationCompleted && paymentMethodMutationError) {
+            setMutationError(paymentMethodMutationError); 
+            onPaymentError();
+        }
+    }, [
+        paymentMethodMutationError,
+        paymentMethodMutationLoading,
+        paymentMethodMutationCalled,
+        onPaymentSuccess,
+        onPaymentError,
+        resetShouldSubmit,
+        data, loading
+    ]);
+
+    return {
+        clientId:
+            data &&
+            data.storeConfig &&
+            data.storeConfig.payment_ewayrapid_sandbox_encryption_key,
+        connectionType:
+            data &&
+            data.storeConfig &&
+            data.storeConfig.payment_ewayrapid_connection_type,
+        onBillingAddressChangedError,
+        onBillingAddressChangedSuccess,
+        mutationError
+    };
+};

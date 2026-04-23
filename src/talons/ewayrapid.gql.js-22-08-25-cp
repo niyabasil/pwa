@@ -1,0 +1,79 @@
+import { gql } from '@apollo/client';
+
+export const GET_EWAY_CONFIG_DATA = gql`
+    query storeConfigData {
+        storeConfig {
+            store_code
+            payment_ewayrapid_sandbox_encryption_key
+            payment_ewayrapid_connection_type
+            payment_ewayrapid_field_styles
+            payment_ewayrapid_payment_action
+            payment_ewayrapid_enable_visa_checkout
+            payment_ewayrapid_mode
+            payment_ewayrapid_sandbox_api_key
+            payment_ewayrapid_sandbox_api_password
+            payment_ewayrapid_sandbox_public_api_key
+            payment_ewayrapid_token_enabled
+            payment_ewayrapid_save_text
+            payment_ewayrapid_save_card_checked
+            payment_ewayrapid_can_edit_token
+            payment_ewayrapid_block_fraud_customers
+            payment_ewayrapid_useccv
+            payment_ewayrapid_cctypes
+            payment_ewayrapid_allowspecific
+            payment_ewayrapid_specificcountry
+            payment_ewayrapid_order_status
+            payment_ewayrapid_transfer_cart_items
+            payment_ewayrapid_invoice_reference
+            payment_ewayrapid_invoice_description
+            payment_ewayrapid_debug
+            payment_ewayrapid_sort_order
+            payment_ewayrapid_hide_payment_method
+            payment_ewayrapid_min_max_scope
+            payment_ewayrapid_min_cart_total
+            payment_ewayrapid_min_cart_total_message
+            payment_ewayrapid_max_cart_total
+            payment_ewayrapid_max_cart_total_message
+            payment_ewayrapid_three_d_secure_two_enabled
+            payment_ewayrapid_three_d_secure_two_verification_type
+            payment_ewayrapid_sandbox_javascript_sdk
+            payment_ewayrapid_live_javascript_sdk
+        }
+    }
+`;
+
+export const SET_PAYMENT_METHOD_ON_CART = gql`
+    mutation setPaymentMethodOnCart(
+        $cartId: String!,
+        $tokenAction: String!,
+        $tokenId: String!,
+        $accessCode: String!
+    ) {
+        setPaymentMethodOnCart(
+            input: {
+                cart_id: $cartId,
+                payment_method: {
+                    code: "ewayrapid",
+                    ewayrapid: {
+                        token_action: $tokenAction,
+                        token_id: $tokenId,
+                        access_code: $accessCode
+                    }
+                }
+            }
+        ) {
+            cart {
+                id
+                selected_payment_method {
+                    code
+                    title
+                }
+            }
+        }
+    }
+`;
+
+export default {
+    getEwayConfigQuery: GET_EWAY_CONFIG_DATA,
+    setPaymentMethodOnCartMutation: SET_PAYMENT_METHOD_ON_CART
+};
