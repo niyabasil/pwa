@@ -1,0 +1,76 @@
+.root {
+
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #31353b;
+}
+
+.deleteAll {
+    composes: text-sm from global;
+    color: #333;
+    composes: flex from global;
+}
+
+.wrapBtnPrint {
+    composes: flex from global;
+    composes: items-center from global;
+}
+
+.deleteAll:hover, .wrapBtnPrint:hover {
+    color: #020202;
+}
+
+.btnPrint {
+    font-size: 14px;
+    color: #333;
+    composes: px-0 from global;
+    composes: py-4 from global;
+    composes: mr-4 from global;
+    composes: flex from global;
+    composes: relative from global;
+}
+
+.btnPrint:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 15px;
+    background: #d8d8d8;
+}
+
+.deleteIcon {
+    composes: mr-1 from global;
+    composes: inline-block from global;
+    background-position: -527px -373px;
+    width: 20px;
+    height: 20px;
+    composes: icon-sprite from global;
+}
+
+.printIcon {
+    composes: mr-1 from global;
+    composes: inline-block from global;
+    background-position: -607px -373px;
+    width: 21px;
+    height: 20px;
+    composes: icon-sprite from global;
+}
+
+.heading {
+    composes: flex from global;
+    composes: pb-4 from global;
+    composes: justify-between from global;
+}
+
+.logo {
+    --height: 52px;
+    --width: 236px;
+    width: var(--width);
+    height: var(--height);
+}

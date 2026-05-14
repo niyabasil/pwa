@@ -1,0 +1,23 @@
+{
+  "name": "@tigrensolutions/compare",
+  "version": "2.3.0",
+  "private": true,
+  "description": "Compare list feature for PWA Studio",
+  "main": "./targets/local-intercept.js",
+  "license": "(OSL-3.0 OR AFL-3.0)",
+  "author": "Tigren Solutions",
+  "dependencies": {
+    "react-to-print": "~2.12.3"
+  },
+  "peerDependencies": {
+    "@apollo/client": "~3.5.0",
+    "@magento/peregrine": "~13.1.1",
+    "@magento/pwa-buildpack": "~11.4.2",
+    "@magento/venia-ui": "~10.2.0"
+  },
+  "pwa-studio": {
+    "targets": {
+      "intercept": "./targets/local-intercept"
+    }
+  }
+}

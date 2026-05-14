@@ -1,0 +1,98 @@
+.compare {
+    composes: text-black from global;
+    composes: inline-flex from global;
+    composes: sm-max_flex from global;
+    composes: items-center from global;
+    composes: gap-x-1 from global;
+    composes: relative from global;
+    composes: md_gap-x-2xs from global;
+    /* @formatter:off */
+    composes: md-max_text-[10px] from global;
+    /* @formatter:on */
+	composes: min-w-[2.5rem] from global;
+}
+
+.compare:before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    margin-top: -10px;
+}
+
+.compare:hover,
+.inCompare {
+    --fill: var(--theme__base-color, #af0000);
+    --stroke: var(--theme__base-color, #af0000);
+    color: var(--theme__base-color, #af0000);
+}
+
+.inCompare:disabled, .inCompare:hover:disabled {
+    pointer-events: none;
+    background: transparent;
+    border-color: var(--theme__base-color, #af0000);
+}
+
+.inCompare:disabled .text {
+    color: var(--theme__base-color, #af0000);
+}
+
+.inWishlist {
+    composes: inline-flex from global;
+	justify-content: center;
+}
+.inWishlist svg{
+	fill: #000;
+    stroke: #000;
+}
+.inWishlist .text{
+	display:block;
+	color: #000 !important;
+    font-size: small;
+}
+.inWishlist .text:hover{
+	color: #333 !important;
+}
+.compareDetail {
+    composes: root_lowPriority from '~@magento/venia-ui/lib/components/Button/button.module.css';
+    composes: w-full from global;
+    /* @formatter:off */
+    composes: min-w-[0] from global;
+    /* @formatter:on */
+    composes: text-black from global;
+    composes: border from global;
+    composes: border-solid from global;
+    composes: border-black from global;
+
+    composes: focus_shadow-none from global;
+    composes: hover_text-white from global;
+    composes: hover_bg-black from global;
+}
+
+.compareDetail .icon {
+    display: none;
+}
+
+.inCompareOpen {
+    composes: root_lowPriority from '~@magento/venia-ui/lib/components/Button/button.module.css';
+}
+
+.inCompareOpen:disabled, .inCompareOpen:hover {
+    border-color: var(--theme__base-color, #af0000);
+}
+
+.iconCompare {
+    composes: block from global;
+    composes: relative from global;
+    composes: bg-transparent from global;
+    composes: mr-2 from global;
+    /* @formatter:off */
+    composes: w-[18px] from global;
+    composes: h-[18px] from global;
+    /* @formatter:on */
+}
+.text{
+	display:none;
+}

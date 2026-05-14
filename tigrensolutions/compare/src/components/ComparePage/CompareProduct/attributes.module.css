@@ -1,0 +1,3 @@
+.root {
+    composes: inline-block from global;
+}

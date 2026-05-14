@@ -1,0 +1,4 @@
+.actionsBottom {
+    composes: flex from global;
+    composes: justify-between from global;
+}

@@ -1,0 +1,182 @@
+.compareWrapper {
+    overflow: auto;
+	border-top: 4px solid #5265a9;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .08);
+    border-radius: .375rem;
+    padding: 2rem;
+}
+
+.compareWrapper::-webkit-scrollbar {
+    width: 10px;
+    height: 7px;
+}
+
+.compareWrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    height: 7px;
+}
+
+.compareWrapper::-webkit-scrollbar-thumb {
+    background: rgba(199, 199, 199, 0.75);
+    height: 7px;
+}
+
+.compareWrapper::-webkit-scrollbar-thumb:hover {
+    background: #8c8888;
+    height: 7px;
+}
+
+.tableCompare td {
+    padding: 5px 10px;
+    border-right: 1px solid #e7e7e7;
+}
+
+.tableCompare thead tr td:last-child,
+.tableCompare thead tr td:first-child,
+.tableCompare tbody tr td:last-child,
+.tableCompare tbody tr td:first-child {
+    border-right: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.tableCompare thead tr td,
+.tableCompare tbody tr td {
+    max-width: 250px;
+}
+
+.priceValue > div {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.tableCompare tr td:first-child {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.ratingContent {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: justify-center from global;
+}
+
+.rating {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: justify-center from global;
+}
+
+.tableCompare tbody tr:nth-child(even) {
+    background: var(--gray_color_f7);
+}
+
+.item {
+    composes: text-sm from global;
+}
+
+.desc {
+    composes: text-sm from global;
+}
+
+.descContent {
+    composes: px-2 from global;
+    composes: py-4 from global;
+}
+
+.descTitle {
+    vertical-align: baseline;
+}
+
+.tableCompare {
+    composes: border-spacing-0 from global;
+}
+
+.tableCompare tr {
+    display: flex;
+}
+
+.tableCompare tr td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    min-width: 250px;
+    display: block;
+}
+
+.tableCompare tr td:first-child {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1.5;
+    width: 125px;
+    min-width: unset;
+}
+
+.tableCompare tbody tr td:first-child {
+    font-weight: bold;
+}
+
+.priceValue > div > div > span {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.priceValue > div > p {
+    font-size: 22px;
+}
+
+.priceValue > div > p + div > span {
+    font-size: 14px;
+}
+
+.tableCompare thead tr:first-child td:not(:first-child) {
+    vertical-align: top;
+}
+
+.tableCompare tr td {
+    font-size: 14px;
+    line-height: 1.5;
+    width: 280px;
+}
+
+.tableCompare tbody tr td {
+    color: #6d6d6d;
+    font-size: 14px;
+}
+
+.tableCompare button[class*='addToCartButton'] {
+    width: 100%;
+}
+
+.item {
+    composes: text-left from global;
+}
+
+.tableCompare tbody tr td:first-child {
+    color: #333333;
+}
+@media (max-width: 960px) {
+	.tableCompare tr td:first-child{
+		width:1px;
+	}
+}
+
+@media (max-width: 767px) {
+    .tableCompare thead tr td:first-child,
+    .tableCompare tbody tr td:last-child,
+    .tableCompare tbody tr td:first-child {
+        padding-right: 25px;
+    }
+}
+
+@media (max-width: 991px) {
+    .tableCompare thead tr td, tbody tr td {
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 575px) {
+    .tableCompare thead tr td,
+    .tableCompare tbody tr td {
+        max-width: 182px;
+    }
+}

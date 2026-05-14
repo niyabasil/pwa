@@ -1,0 +1,82 @@
+<?php
+/*
+ * @author    Tigren Solutions <info@tigren.com>
+ * @copyright Copyright (c) 2022 Tigren Solutions <https://www.tigren.com>. All rights reserved.
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+?>
+<?php
+/** @var Dashboard $block */
+
+use Tigren\PushNotifications\Block\Adminhtml\Dashboard\Dashboard;
+
+// @codingStandardsIgnoreFile
+
+?>
+<div class="tg-pn-dashboard dashboard-container row">
+    <div class="dashboard-main col-m-7 col-m-push-5">
+        <div class="dashboard-item">
+            <div class="dashboard-item-title">Stats</div>
+            <div class="tg-stats-wrapper dashboard-item-content">
+                <div class="tg-item tg-subscribers-count">
+                    <div class="tg-title"><span class="tg-text">
+                            <?= /* @escapeNotVerified */
+                            __('Subscribers'); ?>
+                        </span></div>
+                    <div class="tg-info"><span class="tg-text">
+                            <?= $block->getSubscribersCount(); ?>
+                        </span></div>
+                </div>
+                <div class="tg-item tg-click-rate">
+                    <div class="tg-title">
+                        <span class="tg-text">
+                            <?= /* @escapeNotVerified */
+                            __('Latest ctgpaign click-through rate'); ?>
+                        </span>
+                    </div>
+                    <div
+                        class="tg-info <?php if ($block->isCountIncreased()): ?>-increase<?php else: ?>-decrease<?php endif; ?>">
+                        <span class="tg-text">
+                            <?= $block->getLatestCampaignRate(); ?>%</span>
+                    </div>
+                </div>
+                <div class="tg-item tg-clicks-total">
+                    <div class="tg-title"><span class="tg-text">
+                            <?= /* @escapeNotVerified */
+                            __('Clicks total'); ?>
+                        </span>
+                    </div>
+                    <div class="tg-info"><span class="tg-text">
+                            <?= $block->getClicksTotal(); ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="tg-item tg-finished-ctgpaigns-count">
+                    <div class="tg-title"><span class="tg-text">
+                            <?= /* @escapeNotVerified */
+                            __('Campaigns finished'); ?>
+                        </span></div>
+                    <div class="tg-info"><span class="tg-text">
+                            <?= $block->getFinishedCampaigns(); ?>
+                        </span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-secondary col-m-5 col-m-pull-7">
+        <div class="dashboard-item">
+            <div class="dashboard-item-title"><?= /* @escapeNotVerified */
+                $block->getCampaignGridTitle(); ?></div>
+            <div class="dashboard-item-content">
+                <?= $block->getChildHtml('lastCampaigns') ?>
+            </div>
+        </div>
+        <a class="action-primary" href="<?= /* @escapeNotVerified */
+        $block->getAddCampaignButtonLink(); ?>"
+           title="<?= /* @escapeNotVerified */
+           $block->getAddCampaignButtonTitle(); ?>">
+            <?= /* @escapeNotVerified */
+            $block->getAddCampaignButtonTitle(); ?>
+        </a>
+    </div>
+</div>

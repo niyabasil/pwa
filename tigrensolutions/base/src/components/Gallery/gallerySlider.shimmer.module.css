@@ -1,0 +1,11 @@
+.rootSliderShimmer {
+    margin-top: 20px;
+}
+
+.rootSliderShimmer div[class*="shimmer-root_button"] {
+    min-width: unset;
+}
+
+.rootSliderShimmer :global(.slick-slide) {
+    padding: 0 8px;
+}

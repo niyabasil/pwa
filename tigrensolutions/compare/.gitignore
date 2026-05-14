@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.DS_Store
+.vscode
+jsconfig.json
+.graphqlconfig
+coverage
+dist
+storybook-dist
+.idea
+lerna-debug.log
+yarn-error.log

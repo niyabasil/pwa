@@ -1,0 +1,8 @@
+.message {
+    composes: message from '~@magento/venia-ui/lib/components/ToastContainer/toast.module.css';
+    composes: block from global;
+}
+
+.message strong {
+    font-weight: bold;
+}

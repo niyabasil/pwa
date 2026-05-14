@@ -1,0 +1,46 @@
+.root {
+    composes: fixed from global;
+    composes: w-auto from global;
+    composes: h-auto from global;
+    composes: z-20 from global;
+    composes: bottom-10 from global;
+    composes: left-10 from global;
+    composes: md-max_bottom-20 from global;
+    composes: md-max_right-4 from global;
+    composes: md-max_flex from global;
+    composes: md-max_flex-row-reverse from global;
+}
+
+.root > button {
+    padding: 10px 20px;
+}
+
+.textLabel {
+    composes: md-max_hidden from global;
+}
+
+.icon {
+    composes: hidden from global;
+    composes: md-max_block from global;
+}
+
+@media (max-width: 767px) {
+    .root > button {
+        border-radius: 50%;
+        min-width: auto;
+        height: 42px;
+        width: 44px;
+    }
+
+    .icon {
+        display: block;
+    }
+    .textLabel {
+        display: none;
+    }
+
+    .icon span svg[class*='icon-icon'] {
+        fill: none;
+        stroke: var(--stroke, rgb(var(--venia-global-color-gray-50)));
+    }
+}

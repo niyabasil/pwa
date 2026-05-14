@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author    Tigren Solutions <info@tigren.com>
+  ~ @copyright Copyright (c) 2022 Tigren Solutions <https://www.tigren.com>. All rights reserved.
+  ~ @license   Open Software License ("OSL") v. 3.0
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <tigren_notifications>
+            <general>
+                <enable>1</enable>
+                <api_key></api_key>
+                <sender_id></sender_id>
+            </general>
+            <design>
+                <logo></logo>
+            </design>
+            <prompt>
+                <prompt_enable>1</prompt_enable>
+                <text>Shall we send you a message when we have discounts available?</text>
+                <delay>30</delay>
+                <frequency>1</frequency>
+                <all_pages>1</all_pages>
+                <pages>/</pages>
+            </prompt>
+            <no_spam>
+                <max_limit>0</max_limit>
+            </no_spam>
+        </tigren_notifications>
+    </default>
+</config>

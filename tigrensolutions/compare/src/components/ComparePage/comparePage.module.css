@@ -1,0 +1,4 @@
+.root {
+    composes: px-xs from global;
+    composes: py-sm from global;
+}

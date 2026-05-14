@@ -1,0 +1,13 @@
+.logo {
+    --height: 52px;
+    --width: 236px;
+    width: var(--width);
+    height: var(--height);
+}
+
+@media (max-width: 767px) {
+    .logo {
+        width: calc(var(--width) / 2);
+        height: calc(var(--height) / 2);
+    }
+}

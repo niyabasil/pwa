@@ -1,0 +1,1 @@
+export { useProductPrice } from './useProductPrice';

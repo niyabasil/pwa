@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author    Tigren Solutions <info@tigren.com>
+  ~ @copyright Copyright (c) 2022 Tigren Solutions <https://www.tigren.com>. All rights reserved.
+  ~ @license   Open Software License ("OSL") v. 3.0
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Increase query complexity limiter -->
+    <type name="Magento\Framework\GraphQl\Query\QueryComplexityLimiter">
+        <arguments>
+            <argument name="queryDepth" xsi:type="number">50</argument>
+            <argument name="queryComplexity" xsi:type="number">1000</argument>
+        </arguments>
+    </type>
+
+    <!-- Fix errors while rendering static contents -->
+    <preference for="Magento\Widget\Model\Template\Filter"
+                type="Tigren\Pwa\Override\Magento\Widget\Model\Template\Filter" />
+    <type name="Magento\CmsGraphQl\Model\Resolver\DataProvider\Block">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CmsGraphQl\Model\Resolver\DataProvider\Block"
+                type="Tigren\Pwa\Plugin\Magento\CmsGraphQl\Model\Resolver\DataProvider\Block" />
+    </type>
+
+    <!-- Implement ReCaptcha -->
+    <type name="Magento\CustomerGraphQl\Model\Resolver\CreateCustomer">
+        <plugin name="pwa_verify_recaptcha_before_create_customer"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\CreateCustomer" />
+    </type>
+    <type name="Magento\CustomerGraphQl\Model\Resolver\GenerateCustomerToken">
+        <plugin name="pwa_verify_recaptcha_before_login"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\GenerateCustomerToken" />
+    </type>
+    <type name="Magento\CustomerGraphQl\Model\Resolver\RequestPasswordResetEmail">
+        <plugin name="pwa_verify_recaptcha_before_login"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\RequestPasswordResetEmail" />
+    </type>
+    <type name="Magento\ReCaptchaUi\Model\ValidationConfigResolver">
+        <arguments>
+            <argument name="validationConfigProviders" xsi:type="array">
+                <item name="recaptcha_v3" xsi:type="object">Magento\ReCaptchaVersion3Invisible\Model\Frontend\ValidationConfigProvider\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\ReCaptchaUi\Model\UiConfigResolver">
+        <arguments>
+            <argument name="uiConfigProviders" xsi:type="array">
+                <item name="recaptcha_v3" xsi:type="object">Magento\ReCaptchaVersion3Invisible\Model\Frontend\UiConfigProvider\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Magento\ReCaptchaUi\Model\ErrorMessageConfigInterface"
+                type="Magento\ReCaptchaFrontendUi\Model\ErrorMessageConfig" />
+    <preference for="Magento\ReCaptchaUi\Model\CaptchaTypeResolverInterface"
+                type="Magento\ReCaptchaFrontendUi\Model\CaptchaTypeResolver" />
+
+    <!-- Cart improvements: bypass cart item error message that caused graphql error -->
+    <type name="Magento\QuoteGraphQl\Model\Resolver\CartItems">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\CartItems"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\CartItems" />
+    </type>
+
+    <!-- Fix cart item error in case error code is 1 -->
+    <type name="Magento\QuoteGraphQlPwa\Model\Resolver\CartItemErrors">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQlPwa\Model\Resolver\CartItemErrors"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQlPwa\Model\Resolver\CartItemErrors" />
+    </type>
+
+    <!-- Ignore store filter from customer order collection -->
+    <preference for="Magento\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter"
+                type="Tigren\Pwa\Override\Magento\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter" />
+
+    <!-- Filter wishlist items by website -->
+    <preference for="Magento\WishlistGraphQl\Model\Resolver\WishlistItems"
+                type="Tigren\Pwa\Override\Magento\WishlistGraphQl\Model\Resolver\WishlistItems" />
+
+    <!-- Security check reset password requests -->
+    <type name="Magento\Security\Model\Plugin\AccountManagement">
+        <arguments>
+            <argument name="passwordRequestEvent" xsi:type="const">Magento\Security\Model\PasswordResetRequestEvent::ADMIN_PASSWORD_RESET_REQUEST</argument>
+        </arguments>
+    </type>
+
+    <!-- Check customer is subscribed by website id from current store -->
+    <preference for="Magento\CustomerGraphQl\Model\Resolver\IsSubscribed"
+                type="Tigren\Pwa\Override\Magento\CustomerGraphQl\Model\Resolver\IsSubscribed" />
+
+    <!-- Extend Store Configuration -->
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="general_country_default" xsi:type="string">general/country/default</item>
+                <item name="general_country_optional_zip_countries" xsi:type="string">general/country/optional_zip_countries</item>
+                <item name="payment_checkmo_payable_to" xsi:type="string">payment/checkmo/payable_to</item>
+                <item name="payment_checkmo_mailing_address" xsi:type="string">payment/checkmo/mailing_address</item>
+                <item name="allow_guest_checkout" xsi:type="string">checkout/options/guest_checkout</item>
+                <item name="tax_display_type" xsi:type="string">tax/display/type</item>
+                <item name="sendfriend_email_max_recipients" xsi:type="string">sendfriend/email/max_recipients</item>
+                <item name="paypal_merchant_id" xsi:type="string">payment/paypal_express/merchant_id</item>
+                <item name="paypal_sandbox" xsi:type="string">paypal/wpp/sandbox_flag</item>
+                <item name="head_title_suffix" xsi:type="string">design/head/title_suffix</item>
+                <item name="head_title_prefix" xsi:type="string">design/head/title_prefix</item>
+                <item name="tax_cart_display_price" xsi:type="string">tax/cart_display/price</item>
+                <item name="tax_cart_display_subtotal" xsi:type="string">tax/cart_display/subtotal</item>
+                <item name="tax_cart_display_shipping" xsi:type="string">tax/cart_display/shipping</item>
+                <item name="tax_cart_display_grandtotal" xsi:type="string">tax/cart_display/grandtotal</item>
+                <item name="customer_create_account_vat_frontend_visibility" xsi:type="string">customer/create_account/vat_frontend_visibility</item>
+                <item name="customer_address_company_show" xsi:type="string">customer/address/company_show</item>
+                <item name="customer_address_taxvat_show" xsi:type="string">customer/address/taxvat_show</item>
+                <item name="customer_address_street_lines" xsi:type="string">customer/address/street_lines</item>
+                <item name="customer_address_prefix_show" xsi:type="string">customer/address/prefix_show</item>
+                <item name="customer_address_prefix_options" xsi:type="string">customer/address/prefix_options</item>
+                <item name="customer_address_middlename_show" xsi:type="string">customer/address/middlename_show</item>
+                <item name="customer_address_suffix_show" xsi:type="string">customer/address/suffix_show</item>
+                <item name="customer_address_suffix_options" xsi:type="string">customer/address/suffix_options</item>
+                <item name="customer_address_dob_show" xsi:type="string">customer/address/dob_show</item>
+                <item name="customer_address_taxvat_show" xsi:type="string">customer/address/taxvat_show</item>
+                <item name="customer_address_gender_show" xsi:type="string">customer/address/gender_show</item>
+                <item name="customer_address_telephone_show" xsi:type="string">customer/address/telephone_show</item>
+                <item name="customer_address_company_show" xsi:type="string">customer/address/company_show</item>
+                <item name="customer_address_fax_show" xsi:type="string">customer/address/fax_show</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Fix magento bug: validate stock by website -->
+    <preference for="Magento\ConfigurableProductGraphQl\Model\Cart\BuyRequest\SuperAttributeDataProvider"
+                type="Tigren\Pwa\Override\Magento\ConfigurableProductGraphQl\Model\Cart\BuyRequest\SuperAttributeDataProvider" />
+
+    <!-- Sort Customer Orders by created date -->
+    <preference for="Magento\SalesGraphQl\Model\Resolver\CustomerOrders"
+                type="Tigren\Pwa\Override\Magento\SalesGraphQl\Model\Resolver\CustomerOrders" />
+
+    <!-- Reorder: allow reorder the order from other store -->
+    <preference for="Magento\SalesGraphQl\Model\Resolver\Reorder"
+                type="Tigren\Pwa\Override\Magento\SalesGraphQl\Model\Resolver\Reorder" />
+    <preference for="Magento\Sales\Model\Reorder\Reorder"
+                type="Tigren\Pwa\Override\Magento\Sales\Model\Reorder\Reorder" />
+
+    <!-- Get cart item price in more detail -->
+    <type name="Magento\QuoteGraphQl\Model\Resolver\CartItemPrices">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\CartItemPrices"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\CartItemPrices" />
+    </type>
+
+    <!-- Fix special price -->
+    <preference for="Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product\CollectionProcessor\RequiredColumnsProcessor"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product\CollectionProcessor\RequiredColumnsProcessor" />
+
+    <!-- Remove unnecessary graphql logs -->
+    <preference for="Magento\Framework\GraphQl\Query\ErrorHandler"
+                type="Tigren\Pwa\Override\Magento\Framework\GraphQl\Query\ErrorHandler" />
+
+    <!-- Add payment method instructions -->
+    <type name="Magento\QuoteGraphQl\Model\Resolver\AvailablePaymentMethods">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\AvailablePaymentMethods"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\AvailablePaymentMethods" />
+    </type>
+
+    <!-- Add category filter inputs request to cache -->
+    <type name="Magento\GraphQlCache\Model\CacheableQuery">
+        <plugin name="Tigren\Pwa\Plugin\Magento\GraphQlCache\Model\CacheableQuery"
+                type="Tigren\Pwa\Plugin\Magento\GraphQlCache\Model\CacheableQuery" />
+    </type>
+
+    <!-- Override category image resolver -->
+    <type name="Magento\CatalogGraphQl\Model\Config\CategoryAttributeReader">
+        <arguments>
+            <argument name="categoryAttributeResolvers" xsi:type="array">
+                <item name="image" xsi:type="string">Tigren\Pwa\Model\Resolver\Category\Image</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Correct the response data while adding product to cart -->
+    <preference for="Magento\QuoteGraphQl\Model\Cart\AddSimpleProductToCart"
+                type="Tigren\Pwa\Override\Magento\QuoteGraphQl\Model\Cart\AddSimpleProductToCart" />
+    <type name="Magento\QuoteGraphQl\Model\Resolver\AddProductsToCart">
+        <plugin name="EShopWorld\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\AddProductsToCart"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\AddProductsToCart" />
+    </type>
+
+    <!-- Get layer navigation filters with correct order -->
+    <preference for="Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\AttributeOptionProvider"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\AttributeOptionProvider" />
+    <preference for="Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Attribute"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Attribute" />
+
+    <!-- Add state to order details -->
+    <type name="Magento\SalesGraphQl\Model\Formatter\Order">
+        <plugin name="Tigren\Pwa\Plugin\Magento\SalesGraphQl\Model\Formatter\Order"
+                type="Tigren\Pwa\Plugin\Magento\SalesGraphQl\Model\Formatter\Order" />
+    </type>
+
+    <!-- Add frontend_input -->
+    <preference for="Magento\ConfigurableProductGraphQl\Model\Options\Collection"
+                type="Tigren\Pwa\Override\Magento\ConfigurableProductGraphQl\Model\Options\Collection" />
+
+    <!-- Fix price label -->
+    <preference for="Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Price"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Price" />
+
+    <!-- Save current cart -->
+    <type name="Magento\QuoteGraphQl\Model\Cart\GetCartForUser">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Cart\GetCartForUser"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Cart\GetCartForUser" />
+    </type>
+
+    <!-- Fix DOB in Thai Store -->
+    <type name="Magento\CustomerGraphQl\Model\Customer\CreateCustomerAccount">
+        <plugin name="tigren_pwa_dob_before_customer_save"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Customer\CreateCustomerAccount" />
+    </type>
+
+    <type name="Magento\CustomerGraphQl\Model\Resolver\Customer">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\Customer"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\Customer" />
+    </type>
+
+    <type name="Magento\CustomerGraphQl\Model\Resolver\UpdateCustomer">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\UpdateCustomer"
+                type="Tigren\Pwa\Plugin\Magento\CustomerGraphQl\Model\Resolver\UpdateCustomer" />
+    </type>
+
+    <type name="Magento\SalesGraphQl\Model\OrderItem\DataProvider">
+        <plugin name="Tigren\Pwa\Plugin\Magento\SalesGraphQl\Model\OrderItem\DataProvider"
+                type="Tigren\Pwa\Plugin\Magento\SalesGraphQl\Model\OrderItem\DataProvider" />
+    </type>
+
+    <!-- Register current product on query for customizable options -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Product\Options">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Product\Options"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Product\Options" />
+    </type>
+
+    <!-- Process the "Authorization" header entry -->
+    <type name="Magento\GraphQl\Controller\HttpRequestProcessor">
+        <arguments>
+            <argument name="graphQlHeaders" xsi:type="array">
+                <item name="Authorization" xsi:type="object">Tigren\Pwa\Controller\HttpHeaderProcessor\CustomerProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Edit country label -->
+    <type name="Magento\QuoteGraphQl\Model\Cart\ExtractQuoteAddressData">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Cart\ExtractQuoteAddressData"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Cart\ExtractQuoteAddressData" />
+    </type>
+
+    <!-- Fix page cache issue for CMS URL resolver request -->
+    <type name="Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page"
+                type="Tigren\Pwa\Plugin\Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page" />
+    </type>
+
+    <!-- Fix sort category list for CMS -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Categories\DataProvider\Category\CollectionProcessor\CatalogProcessor">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Categories\DataProvider\Category\CollectionProcessor\CatalogProcessor"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Categories\DataProvider\Category\CollectionProcessor\CatalogProcessor"
+        />
+    </type>
+
+    <!-- Fixed message notification for customer change password -->
+    <type name="Magento\Customer\Model\Authentication">
+        <plugin name="Tigren\Pwa\Plugin\Magento\Customer\Model\Authentication"
+                type="Tigren\Pwa\Plugin\Magento\Customer\Model\Authentication"
+        />
+    </type>
+
+    <!-- Fix filter price with multi currency -->
+    <preference for="Magento\CatalogGraphQl\Model\Resolver\Aggregations"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\Model\Resolver\Aggregations" />
+
+    <!-- Fix incorrect qty for check when update cart -->
+    <preference for="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\QuoteItemQtyList"
+                type="Tigren\Pwa\Override\Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\QuoteItemQtyList" />
+
+    <!-- Add is active filter to category collection -->
+    <preference for="Magento\CatalogGraphQl\Model\Resolver\Categories"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\Model\Resolver\Categories" />
+
+    <!-- Improved layer navigation for attribute type Yes/No-->
+    <type name="Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Formatter\LayerFormatter">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Formatter\LayerFormatter"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Formatter\LayerFormatter"
+        />
+    </type>
+
+    <!-- Allowed to show category filter on category page -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Products">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Products"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Products"
+        />
+    </type>
+
+    <!-- - Updated format for price -->
+    <type name="Magento\Framework\Pricing\Amount\AmountInterface">
+        <plugin name="Tigren\Pwa\Plugin\Magento\Framework\Pricing\Amount\AmountInterface\FormatPricing"
+                type="Tigren\Pwa\Plugin\Magento\Framework\Pricing\Amount\AmountInterface\FormatPricing" />
+    </type>
+
+    <!-- Update price include tax for shipping -->
+    <type name="Magento\QuoteGraphQl\Model\Resolver\ShippingAddress\SelectedShippingMethod">
+        <plugin name="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\ShippingAddress\SelectedShippingMethod"
+                type="Tigren\Pwa\Plugin\Magento\QuoteGraphQl\Model\Resolver\ShippingAddress\SelectedShippingMethod" />
+    </type>
+
+    <!-- Allowed to apply category filter on category page -->
+    <type name="Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Category">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Category"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\DataProvider\Product\LayeredNavigation\Builder\Category" />
+    </type>
+
+    <!-- Filter product reviews by website -->
+    <type name="Magento\Review\Model\ResourceModel\Review\Collection">
+        <plugin name="Tigren\Pwa\Plugin\Magento\Review\Model\ResourceModel\Review\Collection"
+                type="Tigren\Pwa\Plugin\Magento\Review\Model\ResourceModel\Review\Collection" />
+    </type>
+
+    <!-- Update product reviews count by website -->
+    <type name="Magento\ReviewGraphQl\Model\Resolver\Product\ReviewCount">
+        <plugin name="Tigren\Pwa\Plugin\Magento\ReviewGraphQl\Model\Resolver\Product\ReviewCount"
+                type="Tigren\Pwa\Plugin\Magento\ReviewGraphQl\Model\Resolver\Product\ReviewCount" />
+    </type>
+
+    <!-- Fix missing selected item order configuration product has customize options -->
+    <preference for="Magento\SalesGraphQl\Model\OrderItem\OptionsProcessor"
+                type="Tigren\Pwa\Override\Magento\SalesGraphQl\Model\OrderItem\OptionsProcessor" />
+</config>

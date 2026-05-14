@@ -1,0 +1,31 @@
+.root {
+    padding: 1.125rem 0 0 10px;
+    margin-top: 20px;
+    max-width: 100%;
+}
+
+.title {
+    font-weight: var(--venia-global-fontWeight-semibold);
+}
+
+.mailingAddressTitle {
+    font-weight: var(--venia-global-fontWeight-semibold);
+    padding-top: 1rem;
+}
+
+.note {
+    padding: 1rem 0;
+}
+
+.formatAddress {
+    padding: 0.5rem 0;
+}
+
+.addressLine {
+    display: block;
+    padding-bottom: 0.5rem;
+}
+
+.error {
+    color: red;
+}

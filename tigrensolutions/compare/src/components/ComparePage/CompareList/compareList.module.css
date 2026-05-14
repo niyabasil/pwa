@@ -1,0 +1,11 @@
+.itemActionLoading {
+    composes: w-full from global;
+    /* @formatter:off */
+    composes: h-[200px] from global;
+    /* @formatter:on */
+}
+
+.empty {
+    composes: text-black from global;
+    composes: text-sm from global;
+}

@@ -1,0 +1,26 @@
+{
+    "name": "tigrensolutions/module-pwa-performance",
+    "type": "magento2-module",
+    "description": "Improve performance for Tigren PWA Theme",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "version": "1.0.2",
+    "authors": [
+        {
+            "name": "Tigren Team",
+            "email": "support@tigrensolutions.com",
+            "homepage": "http://www.tigrensolutions.com/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Tigren\\PwaPerformance\\": ""
+        }
+    }
+}

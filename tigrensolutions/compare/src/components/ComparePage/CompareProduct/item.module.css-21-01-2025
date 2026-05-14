@@ -1,0 +1,294 @@
+.root {
+    composes: flex from global;
+    composes: flex-col from global;
+    composes: justify-between from global;
+    composes: relative from global;
+    composes: h-full from global;
+    composes: px-4 from global;
+	composes: text-center from global;
+}
+
+.root_busy {
+    composes: root;
+    composes: opacity-50 from global;
+    composes: pointer-events-none from global;
+}
+
+.itemActions {
+    composes: absolute from global;
+    /* @formatter:off */
+    composes: top-1.5 from global;
+    composes: right-2.5 from global;
+    /* @formatter:on */
+    z-index: 2;
+}
+
+.itemActions button {
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    border: none;
+    flex-basis: 100%;
+}
+
+.images {
+    composes: basis-full from global;
+    composes: flex from global;
+    composes: justify-center from global;
+}
+
+.images img {
+    margin: 0 auto;
+    object-fit: contain;
+    aspect-ratio: 1/1;
+}
+
+.imageContainer {
+    composes: h-full from global;
+    composes: items-center from global;
+}
+
+.wrapRemove {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: justify-center from global;
+    composes: mx-0 from global;
+    composes: my-auto from global;
+}
+
+.textRemove {
+    color: var(--primary__color);
+    composes: text-base from global;
+    composes: md-max_text-sm from global;
+}
+
+.textWishlist {
+    composes: pt-4 from global;
+    /* @formatter:off */
+    composes: pt-3.5 from global;
+    /* @formatter:on */
+    composes: text-base from global;
+    color: var(--primary__color);
+    composes: mr-5 from global;
+}
+
+.wishlist {
+    /* @formatter:off */
+    composes: mr-2.5 from global;
+    /* @formatter:on */
+}
+
+.textWishlist:hover, .textRemove:hover {
+    color: var(--button__danger__hover__background);
+}
+
+.rootPrice {
+    composes: flex from global;
+    composes: w-full from global;
+    composes: items-center from global;
+    /* @formatter:off */
+    composes: pb-2.5 from global;
+    /* @formatter:on */
+    composes: flex-wrap from global;
+}
+
+.rootPrice .specialPrice {
+    color: var(--price_list_special-color);
+    margin-right: 10px;
+}
+
+.rootPrice .specialPrice span {
+    font-size: 16px;
+}
+
+.wrapBtn {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: whitespace-nowrap from global;
+    composes: mt-1 from global;
+    composes: justify-between from global;
+}
+
+.removeIcon {
+    composes: inline-block from global;
+    composes: mr-2 from global;
+    composes: w-5 from global;
+    composes: h-5 from global;
+    background-position: -527px -373px;
+    composes: icon-sprite from global;
+    composes: md-max_mr-0 from global;
+}
+
+.wlIcon {
+    composes: inline-block from global;
+    composes: w-5 from global;
+    composes: h-5 from global;
+    background-position: -615px -207px;
+    composes: icon-sprite from global;
+    composes: mr-1 from global;
+}
+
+.name {
+    composes: basis-full from global;
+    color: var(--primary__color);
+    composes: text-basic from global;
+    composes: mt-2 .5 from global;
+    composes: overflow-hidden from global;
+    /* @formatter:off */
+    composes: min-h-[72px] from global;
+    /* @formatter:on */
+    line-height: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+	
+	padding:10px 0;
+	text-align: center;
+	min-height: 72px;
+}
+
+.price {
+    /* @formatter:off */
+    composes: basis-2/4	from global;
+    /* @formatter:on */
+    composes: h-full from global;
+    composes: mt-2 from global;
+}
+
+.price_root {
+    composes: flex from global;
+    composes: flex-col from global;
+}
+
+.price_regularPriceList {
+    composes: regularPriceList from '~@tigrensolutions/base/src/components/ProductPrice/productPrice.module.css';
+    padding: 0;
+}
+
+.price span {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1.1;
+}
+
+.root div[class*="addToCartButton-actions"] {
+    margin-top: 0;
+}
+
+.wishlistButton {
+    composes: flex from global;
+    /* @formatter:off */
+    composes: basis-2/4	from global;
+    /* @formatter:on */
+    composes: justify-end from global;
+}
+
+.buttonAddToWishlist_root {
+    composes: flex from global;
+    composes: justify-end from global;
+}
+
+.wishlistButton button[data-name="add-wishlist"] {
+    transform: scale(0.8);
+    width: auto;
+    height: auto;
+}
+
+.wishlistButton button[data-name="add-wishlist"] span {
+    background: transparent;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+}
+
+.addToCartBtn {
+    flex: 1;
+    /*max-width: 110px;*/
+}
+
+.wrapQuantity {
+    /* @formatter:off */
+    composes: mr-2.5 from global;
+    composes: max-w-[80px] from global;
+    /* @formatter:on */
+
+}
+
+.wrapQuantity > div {
+    width: 80px;
+}
+
+.wrapCart {
+    composes: flex from global;
+    composes: mt-2 from global;
+}
+
+.wrapCart form {
+    display: grid;
+    grid-template-columns: 95px auto;
+    align-items: center;
+}
+
+.wrapCart form + form {
+    display: none;
+}
+
+.wrapCart form + .unavailableContainer {
+    display: none;
+}
+.addToCartAction{
+	
+}
+@media (max-width: 991px) {
+    .wrapCart form {
+        grid-template-columns: 80px auto;
+    }
+
+    .root {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 767px) {
+    .wishlist span {
+        padding-left: 4px;
+    }
+
+    .wishlist button {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
+
+    .root button[data-action="addToCart"]:after {
+        content: "";
+        display: block;
+        width: 22px;
+        height: 20px;
+        background-image: var(--background_image_icon);
+        background-size: var(--background_image_size);
+        background-position: -121px -440px;
+    }
+
+    .root button[class*='addToCartButton'] {
+        width: 100%;
+    }
+
+    .root button[class*='addToCartButton'] span[class*='icon-root'] {
+        display: none;
+    }
+
+    .root button[class*='addToCartButton'] span[class*='addToCartButton-text'] {
+        display: block;
+    }
+
+    .root button[data-action="addToCart"] span[class*="button-content"],
+    .root button[data-action="addToCart"] span[class*="button-content"] span {
+        font-size: 0;
+    }
+
+    .root button[data-action="addToCart"]:hover,
+    .root button[data-action="addToCart"]:focus {
+        background-color: var(--button__background) !important;
+    }
+}

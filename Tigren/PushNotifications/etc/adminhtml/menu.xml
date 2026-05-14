@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author    Tigren Solutions <info@tigren.com>
+  ~ @copyright Copyright (c) 2022 Tigren Solutions <https://www.tigren.com>. All rights reserved.
+  ~ @license   Open Software License ("OSL") v. 3.0
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Tigren_PushNotifications::notifications"
+             title="Push Notifications"
+             module="Tigren_PushNotifications"
+             parent="Tigren_Core::tigren"
+             sortOrder="100"
+             resource="Tigren_PushNotifications::notifications"
+        />
+        <add id="Tigren_PushNotifications::notifications_dashboard"
+             title="Dashboard"
+             sortOrder="10"
+             module="Tigren_PushNotifications"
+             parent="Tigren_PushNotifications::notifications"
+             action="tigren_notifications/dashboard/"
+             dependsOnModule="Tigren_PushNotifications"
+             resource="Tigren_PushNotifications::notifications_dashboard"
+        />
+        <add id="Tigren_PushNotifications::notifications_campaign"
+             title="Campaigns"
+             sortOrder="20"
+             module="Tigren_PushNotifications"
+             parent="Tigren_PushNotifications::notifications"
+             action="tigren_notifications/campaign/"
+             dependsOnModule="Tigren_PushNotifications"
+             resource="Tigren_PushNotifications::notifications_campaign"
+        />
+        <add id="Tigren_PushNotifications::notifications_subscriber"
+             title="Subscribers"
+             sortOrder="30"
+             module="Tigren_PushNotifications"
+             parent="Tigren_PushNotifications::notifications"
+             action="tigren_notifications/subscriber/"
+             dependsOnModule="Tigren_PushNotifications"
+             resource="Tigren_PushNotifications::notifications_subscriber"
+        />
+    </menu>
+</config>

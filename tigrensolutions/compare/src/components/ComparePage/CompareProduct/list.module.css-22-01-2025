@@ -1,0 +1,71 @@
+.root {
+    composes: block from global;
+}
+
+.title {
+    composes: text-lg from global;
+    composes: font-bold from global;
+    composes: text-black from global;
+    composes: xs-max_mb-2 from global;
+}
+
+.deleteAll {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: text-sm from global;
+    composes: text-black from global;
+    composes: hover_text-gray-800 from global;
+}
+
+.wrapBtnPrint {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: hover_text-gray-800 from global;
+}
+
+.btnPrint {
+    composes: flex from global;
+    composes: items-center from global;
+    composes: text-sm from global;
+    composes: text-black from global;
+    composes: px-xs from global;
+    composes: mr-xs from global;
+    composes: relative from global;
+    composes: xs-max_pl-0 from global;
+}
+
+.btnPrint:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 15px;
+    background: #d8d8d8;
+}
+
+.deleteIcon {
+    composes: inline-block from global;
+    composes: mr-2 from global;
+    background-position: -527px -373px;
+    width: 20px;
+    height: 20px;
+    composes: icon-sprite from global;
+}
+
+.printIcon {
+    composes: inline-block from global;
+    composes: mr-2 from global;
+    background-position: -607px -373px;
+    width: 21px;
+    height: 20px;
+    composes: icon-sprite from global;
+}
+
+.heading {
+    composes: flex from global;
+    composes: xs-max_flex-col from global;
+    composes: justify-between from global;
+    composes: pb-4 from global;
+}

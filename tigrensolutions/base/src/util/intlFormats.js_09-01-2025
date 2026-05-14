@@ -1,0 +1,119 @@
+export const intlFormats = {
+    USD: {
+        symbol: '$',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    GBP: {
+        symbol: '£',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    EUR: {
+        symbol: '€',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    ARS: {
+        symbol: '$&nbsp;',
+        decimal: '',
+        groupDelim: '.',
+        maximumFractionDigits: 2
+    },
+    BRL: {
+        symbol: 'R$',
+        decimal: ',',
+        groupDelim: '.',
+        maximumFractionDigits: 2
+    },
+    IDR: {
+        symbol: 'Rp&nbsp;',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    ILS: {
+        symbol: '₪',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    RUB: {
+        symbol: '&nbsp;РУБ',
+        decimal: ',',
+        groupDelim: '&nbsp;',
+        maximumFractionDigits: 2,
+        symbolAfter: true
+    },
+    ZAR: {
+        symbol: 'R&nbsp;',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    KRW: {
+        symbol: '₩',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    TRY: {
+        symbol: '₺',
+        decimal: ',',
+        groupDelim: '.',
+        maximumFractionDigits: 2,
+        symbolAfter: true
+    },
+    UAH: {
+        symbol: 'грн',
+        decimal: '.',
+        groupDelim: '&nbsp;',
+        maximumFractionDigits: 2,
+        symbolAfter: true
+    },
+    HKD: {
+        symbol: 'HK$',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    JPY: {
+        symbol: '¥',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    AUD: {
+        symbol: 'AU$',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    MYR: {
+        symbol: 'RM',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    TWD: {
+        symbol: 'NT$',
+        decimal: '',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    SGD: {
+        symbol: 'S$',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    },
+    THB: {
+        symbol: '฿',
+        decimal: '.',
+        groupDelim: ',',
+        maximumFractionDigits: 2
+    }
+};

@@ -1,0 +1,10 @@
+type Mutation {
+    subscribeFirebase(
+        token: String
+    ): SubscribeFirebaseOutput @resolver(class: "\\Tigren\\PushNotificationsGraphQl\\Model\\Resolver\\Subscribe") @doc(description: "Subscribe to receive notifications")
+}
+
+type SubscribeFirebaseOutput {
+    result: Boolean
+    message: String
+}

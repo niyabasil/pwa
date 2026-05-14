@@ -1,0 +1,106 @@
+.root {
+    composes: flex from global;
+    composes: items-start from global;
+    composes: flex-wrap from global;
+    composes: leading-normal from global;
+    /* @formatter:off */
+    composes: gap-[15px] from global;
+    /* @formatter:on */
+    /*product price*/
+    --price_list_regular-color: #000;
+    --price_list_regular-size: 16px;
+    --price_list_special-color: #ec1717;
+    --price_list_special-size: 16px;
+    --price_list_old-color: #9c9c9c;
+    --price_list_old-size: 12px;
+    --price_product_regular-color: #000;
+    --price_product_regular-size: 16px;
+    --price_product_special-color: #ec1717;
+    --price_product_special-size: 16px;
+    --price_product_old-color: #acacac;
+    --price_product_old-size: 14px;
+    --search-price_list_regular-size: 16px;
+    --search-price_list_special-size: 16px;
+    --search-price_list_old-size: 12px;
+}
+
+.root p {
+    margin: 0;
+}
+
+.productPrice {
+    font-size: var(--price_list_regular-size);
+    color: var(--price_list_regular-color);
+    composes: font-semibold from global;
+    composes: m-0 from global;
+    composes: block from global;
+}
+
+.specialPrice {
+    font-size: var(--price_list_special-size);
+    color: var(--price_list_special-color);
+    composes: font-semibold from global;
+    composes: m-0 from global;
+    composes: block from global;
+}
+
+.oldPrice {
+    font-size: var(--price_list_old-size);
+    color: var(--price_list_old-color);
+    composes: line-through from global;
+    composes: block from global;
+}
+
+.priceList .productPrice {
+    font-size: var(--price_list_regular-size);
+}
+
+.priceList .specialPrice {
+    font-size: var(--price_list_special-size);
+}
+
+.priceList .oldPrice {
+    font-size: var(--price_list_old-size);
+}
+
+.price .productPrice {
+    font-size: var(--price_product_regular-size);
+}
+
+.price .specialPrice {
+    font-size: var(--price_product_special-size);
+}
+
+.price .oldPrice {
+    font-size: var(--price_list_old-size);
+}
+
+.priceSearch .productPrice {
+    font-size: var(--search-price_list_regular-size);
+}
+
+.priceSearch .specialPrice {
+    font-size: var(--search-price_list_special-size);
+}
+
+.priceSearch .oldPrice {
+    font-size: var(--search-price_list_old-size);
+}
+
+.exclPrice {
+    font-size: var(--price_list_old-size);
+    color: var(--price_list_old-color);
+    composes: block from global;
+}
+
+@media (max-width: 767px) {
+    .root {
+        /*product price*/
+        --price_list_regular-size: 14px;
+        --price_list_special-size: 14px;
+        --price_list_old-size: 10px;
+        --price_product_regular-size: 16px;
+        --price_product_special-size: 16px;
+        --price_product_old-size: 10px;
+    }
+}

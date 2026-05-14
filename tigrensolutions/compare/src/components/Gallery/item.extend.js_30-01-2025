@@ -1,0 +1,24 @@
+const isModuleAvailable = require('@tigrensolutions/base/helpers/isModuleAvailable');
+module.exports = (targetables, targetablePath) => {
+    const GalleryItemComponent = targetables.reactComponent(targetablePath);
+    const AddToCompareButtonComponent = GalleryItemComponent.addImport(
+        `{ AddToCompareButton } from '@tigrensolutions/compare/src/components/AddToCompareButton'`
+    );
+    GalleryItemComponent.insertBeforeSource(
+        `{wishlistButton}`,
+        `<${AddToCompareButtonComponent} product={item} classes={classes}/>`
+    );
+    if(!isModuleAvailable('@tigrensolutions/core')){
+        GalleryItemComponent.addImport(
+            'compareClasses from "@tigrensolutions/compare/src/components/Gallery/item.module.css"'
+        )
+        GalleryItemComponent.insertAfterSource(
+            `useStyle(defaultClasses`,
+            `, compareClasses`
+        );
+        GalleryItemComponent.insertAfterSource(`{addButton}`,`
+                                        <div class={classes.actionsBottom}>`);
+        GalleryItemComponent.insertAfterSource(`{wishlistButton}`,`
+                                        </div>`)
+    }
+};

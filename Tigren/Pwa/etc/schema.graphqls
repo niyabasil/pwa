@@ -1,0 +1,281 @@
+type Query {
+    product (
+        id: Int! @doc(description: "The ID of product")
+        is_detail: Boolean = false
+    ): Product @doc(description: "The Product object")
+    @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product")
+    searchSuggest (
+        query: String! @doc(description: "The query word")
+    ): [SearchResult]
+    @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Search\\SearchSuggest")
+    searchDetail (
+        query: String! @doc(description: "The query word")
+    ): SearchDetail
+    @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Search\\SearchDetail")
+    storeConfig: StoreConfig @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\StoreConfig\\Identity")
+    availableStores(
+        useCurrentGroup: Boolean
+    ): [StoreConfig] @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\AvailableStores\\Identity")
+    popularSearchTerms: PopularSearchTerms @doc(description: "An arry of popular search terms")
+    @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Search\\PopularSearchTerms")
+    currency: Currency @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\Currency\\Identity")
+    countries: [Country] @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\Countries\\Identity")
+    country (id: String): Country @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\Country\\Identity")
+    customAttributeMetadata(attributes: [AttributeInput!]!): CustomAttributeMetadata @cache(cacheable:true, cacheIdentity: "Tigren\\Pwa\\Model\\Resolver\\CustomAttributeMetadata\\Identity")
+    order (
+        order_number: String! @doc(description: "Increment ID of the Sales Order")
+        tracking: TrackingInput @doc(description: "Order and return data")
+    ): CustomerOrder @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Sales\\Order") @doc(description: "The Sales Order query returns information about a Sales order")
+    productAttribute(
+        product_id: Int
+    ): [Attribute] @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\ProductAttribute")
+    compareList(uid: ID! @doc(description: "The unique ID of the compare list to be queried.")): CompareList @resolver(class: "\\Magento\\CompareListGraphQl\\Model\\Resolver\\CompareList") @doc(description: "Return products that have been added to the specified compare list.") @cache(cacheable: false)
+}
+
+type Mutation {
+    clearCart(cartId: String!): Cart @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Cart\\ClearCart")
+    validateLinkToken(
+        token: String!,
+        customerId: Int
+    ): Boolean @doc(description:"validate customer token")
+    @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Customer\\ValidateLinkToken")
+    resetPassword_v2 (
+        resetPasswordToken: String!,
+        newPassword: String!,
+        confirmPassword: String!,
+        customerId: Int
+    ): Boolean  @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Customer\\ResetPassword")
+    @doc(description: "Reset a customer's password using the reset password token that the customer received in an email after requesting it using requestPasswordResetEmail.")
+    requestPasswordResetEmail_v2 (email: String!): Boolean  @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Customer\\RequestPasswordResetEmail") @doc(description: "Request an email with a reset password token for the registered customer identified by the specified email.")
+    saveTermLog (
+        query: String
+        num_results: Int
+    ): Boolean @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Search\\SaveTermLog") @doc(description: "Save term log query")
+}
+
+type Cart {
+    has_error: Boolean @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Cart\\HasError")
+    messages: [CartMessage] @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Cart\\Messages")
+    crosssell_products: [ProductInterface] @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\Cart\\CrossSellProducts")
+}
+
+interface CartItemInterface {
+    has_error: Boolean @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\CartItem\\HasError")
+    messages: [CartItemMessage] @resolver(class: "\\Tigren\\Pwa\\Model\\Resolver\\CartItem\\Messages")
+    image: String @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Quote\\Item\\ProductImage")
+}
+
+type CartMessage {
+    type: String
+    text: String
+}
+
+type CartItemMessage {
+    type: String
+    text: String
+}
+
+type CartItemError {
+    code: CartItemErrorType @doc(description: "An error code that describes the error encountered")
+    message: String @doc(description: "A localized error message")
+}
+
+type Product {
+    item : ProductInterface
+}
+
+type StoreConfig {
+    general_country_default: String @doc(description: "Country default")
+    general_country_optional_zip_countries: String @doc(description: "The countries is not required zipcode")
+    payment_checkmo_payable_to: String
+    payment_checkmo_mailing_address: String
+    allow_guest_checkout: Boolean @doc(description: "Allow guest checkout")
+    tax_display_type: Int
+    tax_cart_display_price: Int
+    tax_cart_display_subtotal: Int
+    tax_cart_display_shipping: Int
+    tax_cart_display_grandtotal: Int
+    sendfriend_email_max_recipients: Int
+    paypal_merchant_id : String @doc(description: "Paypal Merchant Id")
+    paypal_sandbox : String @doc(description: "Paypal Sandbox")
+    head_title_suffix : String @doc(description: "Head Title Suffix.")
+    head_title_prefix : String @doc(description: "Head Title Prefix.")
+    customer_create_account_vat_frontend_visibility: String
+    customer_address_company_show: String
+    customer_address_taxvat_show: String
+    customer_address_street_lines: String
+    customer_address_prefix_show: String
+    customer_address_prefix_options: String
+    customer_address_middlename_show: String
+    customer_address_suffix_show: String
+    customer_address_suffix_options: String
+    customer_address_dob_show: String
+    customer_address_taxvat_show: String
+    customer_address_gender_show: String
+    customer_address_telephone_show: String
+    customer_address_company_show: String
+    customer_address_fax_show: String
+}
+
+type SearchResult {
+    title: String
+    num_results: Int
+}
+
+type SearchDetail {
+    suggestions: SearchQuery
+    recommendations: SearchQuery
+}
+
+type SearchQuery {
+    items: [QueryResult]
+    show_result_count: Boolean
+}
+
+type QueryResult {
+    queryText: String
+    resultsCount: Int
+}
+
+interface ProductInterface {
+    attributes: [Attribute] @doc(description: "Product Attributes") @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Attributes")
+    qty_increments: Float @doc(description: "Qty Increments") @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\QtyIncrements")
+    product_tier_prices: [TierPrice] @doc(description: "Product Tier Price") @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\TierPrice")
+    salable_qty: Float @doc(description: "Product Tier Price") @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Salable")
+    base_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\BasePrice")
+    base_price_excl_tax: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\BasePriceExclTax")
+}
+
+type Attribute @doc(description: "define data of an attribute") {
+    label : String
+    code : String
+    value : String
+}
+
+type CartItemPrices {
+    price_including_tax: Money!
+}
+
+interface OrderItemInterface {
+    product_image: String @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Order\\Item\\ProductImage")
+    customize_options: [CustomizeOptionsOrderItem]
+}
+
+type PopularSearchTerms {
+    items: [SearchTermData] @doc(description: "Search Term Data")
+}
+
+type SearchTermData {
+    query_id: String
+    query_text: String
+    ratio: Float
+}
+
+input CustomerInput {
+    order_number: String
+    phone_number: String
+}
+
+type AvailablePaymentMethod {
+    instructions: String! @doc(description: "The payment method instructions.")
+}
+
+type TierPrice @doc(description: "define data of a tier price") {
+    item_id : Int
+    qty : Float
+    price : Float
+    percentage : Float
+}
+
+input TrackingInput {
+    oar_billing_lastname: String! @doc(description: "Billing Last Name  of the Sales Order")
+    oar_type: String! @doc(description: "Find Order By  of the Sales Order")
+    oar_email: String @doc(description: "email of the Sales Order")
+    oar_zip: String @doc(description: "zipcode of the Sales Order")
+}
+
+type CustomerOrder {
+    items: OrderItemInterface @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Sales\\TrackingOrder\\Items")
+    state: String
+    email: String @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Order\\Email")
+    hasEmailAvailable: Boolean @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Order\\HasEmailAvailable")
+}
+
+type ConfigurableProductOptions {
+    frontend_input: String
+    used_in_product_listing: Int
+}
+
+type Customer @doc(description: "Customer defines the customer name and address and other details"){
+    phone_number: String
+}
+
+type CustomizeOptionsOrderItem {
+    label: String
+    value: String
+}
+
+type ProductPrice {
+    minimum_final_price_excl_tax: Money @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\ProductPrice\\MinimumFinalPriceExclTax")
+    maximum_final_price_excl_tax: Money @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\ProductPrice\\MaximumFinalPriceExclTax")
+}
+
+type BundleItemOption {
+    final_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\BundleProduct\\Options\\FinalPrice")
+    final_price_excl_tax: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\BundleProduct\\Options\\FinalPriceExclTax")
+}
+
+type CustomizableDropDownValue {
+    final_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Options\\FinalPrice")
+}
+
+type CustomizableMultipleValue {
+    final_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Options\\FinalPrice")
+}
+
+type CustomizableRadioValue {
+    final_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Options\\FinalPrice")
+}
+
+type CustomizableCheckboxValue {
+    final_price: Float @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Product\\Options\\FinalPrice")
+}
+
+type CustomerAddress {
+    country_name: String @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Country\\CountryName")
+}
+
+type OrderAddress {
+    country_name: String @resolver(class: "Tigren\\Pwa\\Model\\Resolver\\Country\\CountryName")
+}
+
+interface RoutableInterface {
+    url_key: String @doc(description: "The URL Key of entity.")
+}
+
+interface AggregationOptionInterface {
+    is_boolean_filter: Boolean
+}
+
+interface CategoryInterface {
+    is_anchor: Boolean
+}
+
+input CartAddressInput {
+    vat_id: String
+    company: String
+    prefix: String
+    suffix: String
+    middlename: String
+    fax: String
+
+}
+
+interface CartAddressInterface {
+    vat_id: String
+    company: String
+    prefix: String
+    suffix: String
+    middlename: String
+    fax: String
+}
