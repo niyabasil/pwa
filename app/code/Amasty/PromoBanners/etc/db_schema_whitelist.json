@@ -1,0 +1,54 @@
+{
+    "amasty_banner_rule": {
+        "column": {
+            "id": true,
+            "rule_name": true,
+            "is_active": true,
+            "sort_order": true,
+            "from_date": true,
+            "to_date": true,
+            "stores": true,
+            "cust_groups": true,
+            "banner_position": true,
+            "banner_img": true,
+            "banner_link": true,
+            "banner_title": true,
+            "cms_block": true,
+            "conditions_serialized": true,
+            "cats": true,
+            "show_on_products": true,
+            "banner_type": true,
+            "html_text": true,
+            "show_products": true,
+            "actions_serialized": true,
+            "show_on_search": true,
+            "after_n_product_row": true,
+            "n_product_width": true,
+            "segments": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_banner_attribute": {
+        "column": {
+            "id": true,
+            "rule_id": true,
+            "code": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BANNER_RULE_RULE_ID_AMASTY_BANNER_ATTRIBUTE_ID": true
+        }
+    },
+    "amasty_banner_rule_products": {
+        "column": {
+            "id": true,
+            "rule_id": true,
+            "product_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Promo Banners Base for Magento 2
+ */ /* @var $block \Amasty\PromoBanners\Block\Banner */ ?>
+<?php $banner = $block->getBanner() ?>
+
+<div data-banner-id="<?= $banner->getId(); ?>">
+    <?= $block->getBannerText() ?>
+    <?= $block->getChildHtml('product_listing') ?>
+</div>

@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Promo Banners Base for Magento 2
+ */
+/* @var $block \Amasty\PromoBanners\Block\Container */
+
+if ($block->getBannerId()) {
+    $block->setPageBannerId($block->getBannerId());
+}
+?>
+
+<div
+    <?php if (!$block->isVisible() || $block->getPosition() == '15'): ?>
+        style="display: none"
+    <?php endif ?>
+        class="ambanners ambanner-<?= /* @noEscape */ $block->getPosition() ?>"
+        data-position="<?= /* @noEscape */ $block->getPosition() ?>"
+        data-bannerid="<?= /* @noEscape */ $block->getBannerId() ?>"
+        data-role="amasty-banner-container"
+></div>

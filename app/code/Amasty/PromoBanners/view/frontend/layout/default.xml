@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Promo Banners Base for Magento 2
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.components">
+            <block after="-" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.top" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">10</argument>
+                </action>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="div.sidebar.additional">
+            <block after="-" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.right" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">1</argument>
+                </action>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="div.sidebar.main">
+            <block after="-" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.left" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">2</argument>
+                </action>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block class="Amasty\PromoBanners\Block\Banner\Loader" name="ambanners.loader" template="Amasty_PromoBanners::loader.phtml" after="-">
+                <arguments>
+                    <argument name="ampromoBannersDataProvider" xsi:type="object">Amasty\PromoBanners\ViewModel\BannersDataProvider</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

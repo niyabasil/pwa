@@ -1,0 +1,19 @@
+{
+    "name": "amasty/module-promo-banners",
+    "description": "Promo Banners by Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.14.7"
+    },
+    "type": "magento2-module",
+    "version": "1.14.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\PromoBanners\\": ""
+        }
+    }
+}
