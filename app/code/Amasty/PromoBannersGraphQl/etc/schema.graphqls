@@ -1,0 +1,36 @@
+type Query {
+    amPromoBanners(
+        page_type: AmPromoBannerPageType @doc(description: "The page context to load banners for.")
+        category_id: Int @doc(description: "Category ID for category page banners.")
+        product_sku: String @doc(description: "Product SKU for product page banners.")
+        search_query: String @doc(description: "Search query for search result page banners.")
+    ): AmPromoBannersOutput
+    @resolver(class: "Amasty\\PromoBannersGraphQl\\Model\\Resolver\\Banners")
+    @doc(description: "Return active Amasty Promo Banners for the given page context.")
+    @cache(cacheable: false)
+}
+
+enum AmPromoBannerPageType @doc(description: "Supported page types for promo banner placement.") {
+    HOME
+    CATEGORY
+    PRODUCT
+    CART
+    SEARCH
+}
+
+type AmPromoBannersOutput @doc(description: "Container for the list of promo banners.") {
+    items: [AmPromoBanner] @doc(description: "Array of active promo banners.")
+}
+
+type AmPromoBanner @doc(description: "A single Amasty Promo Banner rule.") {
+    banner_id: Int @doc(description: "Unique banner rule ID.")
+    rule_name: String @doc(description: "Internal rule name (admin label).")
+    banner_type: String @doc(description: "Banner display type: image, cms, or html.")
+    banner_img: String @doc(description: "Full media URL of the banner image (for type=image).")
+    banner_link: String @doc(description: "Click-through URL for the banner image.")
+    banner_title: String @doc(description: "Alt / title text for the banner image.")
+    html_text: String @doc(description: "Raw HTML content (for type=html).")
+    cms_block: String @doc(description: "CMS block identifier (for type=cms).")
+    positions: [Int] @doc(description: "List of position codes where this banner is displayed.")
+    sort_order: Int @doc(description: "Banner sort order (higher value = higher priority).")
+}
