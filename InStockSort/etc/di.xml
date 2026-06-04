@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">  
+            <type name="Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\ProductSearch">
+                <plugin name="ecsso_sort_stock_graphql" type="Ecsso\InStockSort\Plugin\ProductSearchPlugin"/>            
+            </type>
+            <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+                <plugin name="ecsso_sort_by_stock" type="Ecsso\InStockSort\Plugin\ProductCollectionPlugin"/>                
+            </type>
+</config>
