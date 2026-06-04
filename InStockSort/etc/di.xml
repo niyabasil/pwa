@@ -17,4 +17,9 @@
         <plugin name="ecsso_sort_by_stock_elasticsearch" type="Ecsso\InStockSort\Plugin\ElasticsearchQueryPlugin"/>
     </type>
 
+    <!-- Add stock_status field to each product's ES document during catalogsearch_fulltext reindex -->
+    <type name="Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider">
+        <plugin name="ecsso_index_stock_status" type="Ecsso\InStockSort\Plugin\IndexDataPlugin"/>
+    </type>
+
 </config>
