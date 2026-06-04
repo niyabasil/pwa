@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Category listing pages: SQL-level stock sort -->
     <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
         <plugin name="ecsso_sort_by_stock" type="Ecsso\InStockSort\Plugin\ProductCollectionPlugin"/>
     </type>
+
+    <!-- Search results pages: join stock data + within-page reorder -->
     <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
         <plugin name="ecsso_sort_by_stock_search" type="Ecsso\InStockSort\Plugin\FulltextCollectionPlugin"/>
     </type>
+
+    <!-- Search results pages: inject stock_status sort into Elasticsearch query (global/cross-page) -->
+    <type name="Magento\Elasticsearch\SearchAdapter\Query\Builder">
+        <plugin name="ecsso_sort_by_stock_elasticsearch" type="Ecsso\InStockSort\Plugin\ElasticsearchQueryPlugin"/>
+    </type>
+
 </config>
