@@ -8,9 +8,17 @@
     </type>
 
     <!-- Search results pages (Amasty ElasticSearch): prepend is_out_of_stock DESC sort -->
-    <!-- is_out_of_stock field: 1=in stock, 0=out of stock — DESC puts in-stock first globally -->
     <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\SortingProvider">
         <plugin name="ecsso_sort_by_stock_amasty" type="Ecsso\InStockSort\Plugin\AmastySearchSortingPlugin"/>
+    </type>
+
+    <!-- DEBUG: detect which search engine handles the search results page -->
+    <!-- Remove both debug plugins after confirming which module is active  -->
+    <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\SortingProvider">
+        <plugin name="ecsso_debug_amasty" type="Ecsso\InStockSort\Plugin\SearchCollectionDebugPlugin"/>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+        <plugin name="ecsso_debug_fulltext" type="Ecsso\InStockSort\Plugin\SearchCollectionDebugPlugin"/>
     </type>
 
 </config>
