@@ -12,13 +12,15 @@
         <plugin name="ecsso_sort_by_stock_amasty" type="Ecsso\InStockSort\Plugin\AmastySearchSortingPlugin"/>
     </type>
 
-    <!-- DEBUG: detect which search engine handles the search results page -->
-    <!-- Remove both debug plugins after confirming which module is active  -->
+    <!-- DEBUG plugins — remove after identifying the search chain -->
     <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\SortingProvider">
         <plugin name="ecsso_debug_amasty" type="Ecsso\InStockSort\Plugin\SearchCollectionDebugPlugin"/>
     </type>
     <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
         <plugin name="ecsso_debug_fulltext" type="Ecsso\InStockSort\Plugin\SearchCollectionDebugPlugin"/>
+    </type>
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\ProductSearch\ProductCollectionSearchCriteriaBuilder">
+        <plugin name="ecsso_debug_criteria_builder" type="Ecsso\InStockSort\Plugin\SearchCollectionDebugPlugin"/>
     </type>
 
 </config>
