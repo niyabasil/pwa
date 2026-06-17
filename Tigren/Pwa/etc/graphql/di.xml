@@ -254,6 +254,11 @@
                 type="Tigren\Pwa\Plugin\Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page" />
     </type>
 
+    <!-- Sort subcategories alphabetically — override ExtractDataFromCategoryTree sortTree method -->
+    <preference for="Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\ExtractDataFromCategoryTree"
+                type="Tigren\Pwa\Override\Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\ExtractDataFromCategoryTree"
+    />
+
     <!-- Sort subcategories alphabetically in navigation menu (CategoryList top level) -->
     <type name="Magento\CatalogGraphQl\Model\Resolver\CategoryList">
         <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryList"
