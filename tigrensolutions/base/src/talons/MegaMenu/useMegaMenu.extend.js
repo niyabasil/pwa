@@ -1,19 +1,12 @@
 /*
- * Sort MegaMenu subcategories alphabetically at the frontend level.
- * This complements the backend Children resolver plugin.
+ * Sort MegaMenu subcategories alphabetically by name.
+ * useMegaMenu.js sorts children by position — we replace that with a name sort.
  */
 module.exports = (targetables, targetablePath) => {
     const useMegaMenu = targetables.esModule(targetablePath);
 
-    useMegaMenu.insertAfterSource(
-        `const buildCategoryTree = (rootCategory, branch) => {`,
-        `
-    // Sort children alphabetically before building the tree
-    if (branch && branch.children) {
-        branch.children = [...branch.children].sort((a, b) =>
-            (a.name || '').localeCompare(b.name || '')
-        );
-    }
-`
+    useMegaMenu.replaceSource(
+        `.sort((a, b) => (a.position > b.position ? 1 : -1))`,
+        `.sort((a, b) => (a.name || '').localeCompare(b.name || ''))`
     );
 };
