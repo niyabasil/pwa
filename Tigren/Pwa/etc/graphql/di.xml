@@ -254,6 +254,13 @@
                 type="Tigren\Pwa\Plugin\Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page" />
     </type>
 
+    <!-- Sort subcategories alphabetically in navigation menu -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\CategoryList">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryList"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryList"
+        />
+    </type>
+
     <!-- Fix sort category list for CMS -->
     <type name="Magento\CatalogGraphQl\Model\Resolver\Categories\DataProvider\Category\CollectionProcessor\CatalogProcessor">
         <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Categories\DataProvider\Category\CollectionProcessor\CatalogProcessor"
