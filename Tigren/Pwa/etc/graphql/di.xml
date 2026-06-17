@@ -254,10 +254,17 @@
                 type="Tigren\Pwa\Plugin\Magento\CmsUrlRewriteGraphQl\Model\DataProvider\UrlRewrite\Page" />
     </type>
 
-    <!-- Sort subcategories alphabetically in navigation menu -->
+    <!-- Sort subcategories alphabetically in navigation menu (CategoryList top level) -->
     <type name="Magento\CatalogGraphQl\Model\Resolver\CategoryList">
         <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryList"
                 type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryList"
+        />
+    </type>
+
+    <!-- Sort category children alphabetically (MegaMenu nested levels) -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Category\Children">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Category\Children"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Category\Children"
         />
     </type>
 
