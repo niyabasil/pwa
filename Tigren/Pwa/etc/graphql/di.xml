@@ -261,10 +261,10 @@
         />
     </type>
 
-    <!-- Sort category children alphabetically (MegaMenu nested levels) -->
-    <type name="Magento\CatalogGraphQl\Model\Resolver\Category\Children">
-        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Category\Children"
-                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\Category\Children"
+    <!-- Sort category children alphabetically in MegaMenu (Magento 2.4.6 uses CategoryTree resolver for children) -->
+    <type name="Magento\CatalogGraphQl\Model\Resolver\CategoryTree">
+        <plugin name="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryTree"
+                type="Tigren\Pwa\Plugin\Magento\CatalogGraphQl\Model\Resolver\CategoryTree"
         />
     </type>
 
