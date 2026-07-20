@@ -1,0 +1,7 @@
+.buttons {
+    margin-top: 1rem;
+    display: grid;
+    align-items: center;
+    grid-gap: 1rem;
+    grid-template-columns: min-content min-content;
+}

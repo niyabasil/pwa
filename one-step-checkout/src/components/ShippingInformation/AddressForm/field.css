@@ -1,0 +1,19 @@
+.root {
+    width: 100%;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 960px) {
+    .root {
+        --amOscFieldWidth: 100%;
+        width: var(--amOscFieldWidth);
+    }
+}
+label{
+	font-weight: 400 !important;
+    font-size: 14px;
+}
+select{
+	font-size:13px;
+}

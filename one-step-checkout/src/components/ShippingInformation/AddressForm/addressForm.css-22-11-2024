@@ -1,0 +1,18 @@
+.root {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+}
+
+.buttons {
+    margin: 1rem 0;
+    display: grid;
+    align-items: center;
+    grid-gap: 1rem;
+    grid-template-columns: min-content min-content;
+}
+
+.checkboxContainer {
+    width: 100%;
+    padding: 0.35rem;
+}

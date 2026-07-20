@@ -1,0 +1,28 @@
+.root {
+    width: 100%;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgb(var(--venia-global-color-border));
+    margin-bottom: 1rem;
+}
+
+.loginButtons {
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.forgotPasswordButton {
+    composes: root from '~@magento/venia-ui/lib/components/LinkButton/linkButton.module.css';
+    padding: 0;
+    margin-left: 1rem;
+}
+
+.registerFields {
+    margin-top: 0.5rem;
+    display: grid;
+}
+
+.indicator {
+    composes: indicator from '~@magento/venia-ui/lib/components/LoadingIndicator/indicator.module.css';
+}

@@ -1,0 +1,33 @@
+.radioRoot {
+    display: grid;
+}
+
+.radioRoot_disabled {
+    composes: radioRoot;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.radioContainer {
+    composes: radioContainer from '~@magento/venia-ui/lib/components/RadioGroup/radioGroup.module.css';
+    padding: 1rem 0;
+}
+
+.radioContainer + .radioContainer {
+    border-top: 1px solid rgb(var(--venia-global-color-border));
+}
+
+.radioLabel {
+    display: grid;
+    align-items: center;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr 2fr;
+    cursor: pointer;
+}
+
+.radioContainer_notAvailable {
+    composes: radioContainer;
+    cursor: auto;
+    pointer-events: none;
+    opacity: 0.6;
+}
