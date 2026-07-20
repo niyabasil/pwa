@@ -1,0 +1,22 @@
+import { gql } from '@apollo/client';
+import { PriceSummaryFragment } from '@magento/peregrine/lib/talons/CartPage/PriceSummary/priceSummaryFragments.gql';
+import { GiftWrapInformationFragment } from '../AdditionalOptions/GiftWrap/giftWrap.gql';
+import { PaymentFeeFragment } from '@magento/venia-ui/lib/components/PaymentFee/paymentFee.gql';
+
+const GET_PRICE_SUMMARY = gql`
+    query getPriceSummary($cartId: String!) {
+        cart(cart_id: $cartId) {
+            id
+            ...PriceSummaryFragment
+            ...GiftWrapInformationFragment
+            ...PaymentFeeFragment
+        }
+    }
+    ${PriceSummaryFragment}
+    ${GiftWrapInformationFragment}
+    ${PaymentFeeFragment}
+`;
+
+export default {
+    getPriceSummaryQuery: GET_PRICE_SUMMARY
+};
