@@ -88,6 +88,15 @@ export const SET_BILLING_ADDRESS = gql`
     ${AvailablePaymentMethodsFragment}
 `;
 
+export const GET_CHECKOUT_AGREEMENTS = gql`
+    query getCheckoutAgreementsForPaypal {
+        checkoutAgreements {
+            agreement_id
+            mode
+        }
+    }
+`;
+
 export const GET_CART_READINESS = gql`
     query getCartReadiness($cartId: String!) {
         cart(cart_id: $cartId) {
@@ -119,5 +128,6 @@ export default {
     createPaypalExpressTokenMutation: CREATE_PAYPAL_EXPRESS_TOKEN,
     setPaypalExpressDetailsOnCartMutation: SET_PAYPAL_EXPRESS_DETAILS_ON_CART,
     setBillingAddressMutation: SET_BILLING_ADDRESS,
-    getCartReadinessQuery: GET_CART_READINESS
+    getCartReadinessQuery: GET_CART_READINESS,
+    getCheckoutAgreementsQuery: GET_CHECKOUT_AGREEMENTS
 };

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import mergeOperations from '@magento/peregrine/lib/util/shallowMerge';
 import { useCartContext } from '@magento/peregrine/lib/context/cart';
+import { useAmOscContext } from '@amasty/one-step-checkout/context';
 
 import DEFAULT_OPERATIONS from './paypalExpress.gql';
 import { useToasts } from '@magento/peregrine';
@@ -17,14 +18,21 @@ export const usePaypalExpress = props => {
         createPaypalExpressTokenMutation,
         setPaypalExpressDetailsOnCartMutation,
         setBillingAddressMutation,
-        getCartReadinessQuery
+        getCartReadinessQuery,
+        getCheckoutAgreementsQuery
     } = operations;
 
     const [{ cartId }] = useCartContext();
     const [, { addToast }] = useToasts();
     const { formatMessage } = useIntl();
 
+    const [{ isDoneMap }] = useAmOscContext();
+
     const { data } = useQuery(getPaypalExpressConfigQuery);
+
+    const { data: agreementsData } = useQuery(getCheckoutAgreementsQuery, {
+        fetchPolicy: 'cache-first'
+    });
 
     const { data: cartReadinessData } = useQuery(getCartReadinessQuery, {
         skip: !cartId,
@@ -135,6 +143,25 @@ export const usePaypalExpress = props => {
                           'Please complete your shipping information before proceeding with PayPal.'
                   });
 
+            setErrorMessage(msg);
+            reject(new Error(msg));
+            return;
+        }
+
+        // Check that all MANUAL checkout agreements have been accepted.
+        const manualAgreements = (
+            agreementsData?.checkoutAgreements || []
+        ).filter(a => a.mode === 'MANUAL');
+
+        if (
+            manualAgreements.length > 0 &&
+            isDoneMap.get('AGREEMENT') !== true
+        ) {
+            const msg = formatMessage({
+                id: 'paypalExpress.agreementsNotAccepted',
+                defaultMessage:
+                    'Please read and accept the Terms and Conditions before proceeding with PayPal.'
+            });
             setErrorMessage(msg);
             reject(new Error(msg));
             return;
