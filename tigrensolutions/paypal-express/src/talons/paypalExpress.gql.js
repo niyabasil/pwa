@@ -88,9 +88,36 @@ export const SET_BILLING_ADDRESS = gql`
     ${AvailablePaymentMethodsFragment}
 `;
 
+export const GET_CART_READINESS = gql`
+    query getCartReadiness($cartId: String!) {
+        cart(cart_id: $cartId) {
+            id
+            shipping_addresses {
+                firstname
+                lastname
+                street
+                city
+                postcode
+                region {
+                    code
+                }
+                country {
+                    code
+                }
+                telephone
+                selected_shipping_method {
+                    carrier_code
+                    method_code
+                }
+            }
+        }
+    }
+`;
+
 export default {
     getPaypalExpressConfigQuery: GET_PAYPAL_EXPRESS_CONFIG_DATA,
     createPaypalExpressTokenMutation: CREATE_PAYPAL_EXPRESS_TOKEN,
     setPaypalExpressDetailsOnCartMutation: SET_PAYPAL_EXPRESS_DETAILS_ON_CART,
-    setBillingAddressMutation: SET_BILLING_ADDRESS
+    setBillingAddressMutation: SET_BILLING_ADDRESS,
+    getCartReadinessQuery: GET_CART_READINESS
 };

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import mergeOperations from '@magento/peregrine/lib/util/shallowMerge';
 import { useCartContext } from '@magento/peregrine/lib/context/cart';
@@ -16,7 +16,8 @@ export const usePaypalExpress = props => {
         getPaypalExpressConfigQuery,
         createPaypalExpressTokenMutation,
         setPaypalExpressDetailsOnCartMutation,
-        setBillingAddressMutation
+        setBillingAddressMutation,
+        getCartReadinessQuery
     } = operations;
 
     const [{ cartId }] = useCartContext();
@@ -24,6 +25,31 @@ export const usePaypalExpress = props => {
     const { formatMessage } = useIntl();
 
     const { data } = useQuery(getPaypalExpressConfigQuery);
+
+    const { data: cartReadinessData } = useQuery(getCartReadinessQuery, {
+        skip: !cartId,
+        variables: { cartId },
+        fetchPolicy: 'cache-and-network'
+    });
+
+    const isCheckoutReady = useMemo(() => {
+        const shippingAddresses =
+            cartReadinessData?.cart?.shipping_addresses || [];
+        if (!shippingAddresses.length) return false;
+        const addr = shippingAddresses[0];
+        const hasAddress =
+            addr.firstname &&
+            addr.lastname &&
+            addr.street &&
+            addr.street.length > 0 &&
+            addr.city &&
+            addr.country?.code &&
+            addr.postcode &&
+            addr.telephone;
+        const hasShippingMethod = !!addr.selected_shipping_method?.carrier_code;
+        return !!(hasAddress && hasShippingMethod);
+    }, [cartReadinessData]);
+
     const [errorMessage, setErrorMessage] = useState(null);
     const [loadedScript, setLoadedScript] = useState(false);
 
@@ -83,6 +109,39 @@ export const usePaypalExpress = props => {
     };
 
     const payment = async (resolve, reject) => {
+        if (!isCheckoutReady) {
+            const shippingAddresses =
+                cartReadinessData?.cart?.shipping_addresses || [];
+            const hasAddress = shippingAddresses.length > 0;
+            const hasShippingMethod =
+                hasAddress &&
+                !!shippingAddresses[0].selected_shipping_method?.carrier_code;
+
+            const msg = !hasAddress
+                ? formatMessage({
+                      id: 'paypalExpress.missingShippingAddress',
+                      defaultMessage:
+                          'Please enter your shipping address before proceeding with PayPal.'
+                  })
+                : !hasShippingMethod
+                ? formatMessage({
+                      id: 'paypalExpress.missingShippingMethod',
+                      defaultMessage:
+                          'Please select a shipping method before proceeding with PayPal.'
+                  })
+                : formatMessage({
+                      id: 'paypalExpress.checkoutNotReady',
+                      defaultMessage:
+                          'Please complete your shipping information before proceeding with PayPal.'
+                  });
+
+            setErrorMessage(msg);
+            reject(new Error(msg));
+            return;
+        }
+
+        setErrorMessage(null);
+
         try {
             const resultToken = await createPaypalExpressToken({
                 variables: {
@@ -168,6 +227,7 @@ export const usePaypalExpress = props => {
         onError,
         errorMessage,
         loadedScript,
-        handleLoadScript
+        handleLoadScript,
+        isCheckoutReady
     };
 };
