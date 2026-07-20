@@ -1,0 +1,55 @@
+.root {
+    display: grid;
+    gap: 1rem;
+    background: #fff;
+}
+
+.heading {
+    composes: blockHeader from '../CheckoutPage/checkoutContent.module.css';
+}
+
+.cartContent {
+    composes: root;
+    margin-top: -1rem;
+    padding: 1rem;
+}
+
+.modern {
+    border: 1px solid rgb(var(--venia-global-color-border));
+    padding-bottom: 1rem;
+}
+
+.classic {
+    --gap: var(--inner-gap);
+    --negativeGap: calc(-1 * var(--inner-gap));
+}
+
+.classic .cartContent {
+    margin: -1rem var(--negativeGap) 0 var(--negativeGap);
+    padding: 1rem var(--gap);
+}
+
+.classic .heading {
+    border: 0;
+    position: relative;
+	padding: 0 0 15px 0;
+    margin: 0;
+	border-bottom: 1px solid rgb(var(--venia-global-color-border));
+}
+
+.classic .heading:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--gap);
+    right: var(--gap);
+    height: 1px;
+}
+
+.modern .options {
+    padding: 0 1rem;
+}
+
+.classic .options {
+    padding-top: 1rem;
+}

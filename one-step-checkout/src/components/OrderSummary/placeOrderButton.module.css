@@ -1,0 +1,29 @@
+.root {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto 0 auto;
+	
+}
+
+.button {
+    composes: root from '~@magento/venia-ui/lib/components/Button/button.module.css';
+    background-color: #5265a9;
+    border-color: #5265a9;
+    color: #fff;
+    transition-property: background-color, border-color, color, filter;
+	width:100%;
+	text-transform: uppercase;
+}
+
+.button:hover {
+    filter: brightness(90%);
+    color: #fff;
+}
+
+.button:disabled,
+.button:hover:disabled {
+    pointer-events: none;
+    background-color: #5265a9;
+    border-color: #5265a9; 
+}

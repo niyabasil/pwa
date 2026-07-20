@@ -1,0 +1,11 @@
+.root {
+    margin-top: 2rem;
+}
+
+.heading {
+    composes: heading from './amOrderDetails.module.css';
+}
+
+.content {
+    composes: content from './amOrderDetails.module.css';
+}

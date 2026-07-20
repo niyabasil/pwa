@@ -1,0 +1,51 @@
+.root {
+}
+
+.discountsButton {
+    composes: grid from global;
+    composes: items-center from global;
+    composes: ml-2 from global;
+}
+
+.discountLineItems {
+    composes: lineItems from './priceSummary.module.css';
+
+    composes: items-start from global;
+	display: flex;
+    flex-direction: column;
+}
+
+.discountLineItemLabel {
+    composes: lineItemLabel from './priceSummary.module.css';
+
+    composes: grid from global;
+    composes: grid-flow-col from global;
+    composes: items-center from global;
+}
+
+.individualDiscountSeparator {
+    composes: mx-0 from global;
+
+    color: rgb(var(--venia-global-color-gray-300));
+	border: 0px;
+}
+.individualDiscountsList {
+    composes: lineItemLabel from './priceSummary.module.css';
+	margin:0;
+}
+
+.individualDiscountsListLineItem {
+    composes: lineItems from './priceSummary.module.css';
+    composes: mx-0 from global;
+
+    color: rgb(var(--venia-global-color-gray-700));
+	font-size: 14px;
+}
+:global .cartPage .priceSummary-price {
+    float: right;
+    display: inline-block;
+    margin: 8px 0;
+}
+:global .cartPage .discountSummary-discountLineItems {
+	display: inline-block;
+}

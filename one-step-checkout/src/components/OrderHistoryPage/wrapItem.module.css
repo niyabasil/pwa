@@ -1,0 +1,10 @@
+.root {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.section {
+    display: grid;
+    gap: 0.5rem;
+    font-size: var(--venia-typography-body-S-fontSize);
+}

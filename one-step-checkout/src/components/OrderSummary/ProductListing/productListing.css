@@ -1,0 +1,22 @@
+.root {
+}
+
+.heading {
+    margin-bottom: 1rem;
+}
+
+.expand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.productList_open {
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
+.productList_hidden {
+    display: none;
+}

@@ -1,0 +1,53 @@
+.root {
+    display: grid;
+}
+
+.root_disabled {
+    composes: root;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.radio_group {
+    display: grid;
+}
+
+.payment_method {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgb(var(--venia-global-color-border));
+	font-size: 13px;
+}
+
+.payment_method:last-of-type {
+    border-bottom-width: 0;
+}
+
+.radio_label {
+    font-weight: 600;
+    justify-self: start;
+    cursor: pointer;
+}
+
+.payment_errors {
+    display: grid;
+    gap: 0.5em;
+    color: rgb(var(--venia-global-color-error));
+}
+
+.agreements {
+    margin-top: 0.5rem;
+    display: grid;
+    gap: 0.5rem;
+}
+.payment_method input{
+	width: 13px !important;
+    height: 13px !important;
+}
+:global .active_shadow-radioActive:active{
+	--tw-shadow:0;
+	box-shadow:0;
+}
+.payment_method svg{
+	    width: 14px;
+		margin-left: 5px;
+}
