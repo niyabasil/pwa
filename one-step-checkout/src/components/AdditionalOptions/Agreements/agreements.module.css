@@ -1,0 +1,4 @@
+.link {
+    composes: root from '~@magento/venia-ui/lib/components/LinkButton/linkButton.module.css';
+    text-align: left;
+}

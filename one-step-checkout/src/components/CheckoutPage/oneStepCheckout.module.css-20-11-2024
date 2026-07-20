@@ -1,0 +1,93 @@
+.root {
+    padding: 2.5rem 0;
+    max-width: 1240px;
+    margin: 0 auto;
+    --am-osc-content-paddig: 1.5rem;
+    --am-osc-content-background: #fff;
+    --am-osc-heading-color: rgb(var(--venia-global-color-text));
+    --am-osc-summary-background: rgb(var(--venia-global-color-gray-100));
+    --am-osc-order-btn-background: rgb(var(--venia-brand-color-1-700));
+    --am-osc-font: var(--venia-global-fontFamily-sansSerif);
+    font-family: var(--am-osc-font);
+}
+
+.formErrors {
+    border-color: rgb(var(--venia-global-color-error));
+    border-style: solid;
+    border-width: 0 0 0 5px;
+    padding: 1rem 0 1rem 1rem;
+    display: grid;
+    grid-column: 1 / span 1;
+}
+
+.heading_container {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    grid-auto-flow: column;
+    grid-template-columns: auto max-content;
+}
+
+.heading {
+    color: rgb(var(--venia-global-color-text));
+    font-size: 1.375rem;
+    font-weight: 300;
+    line-height: 1.375rem;
+}
+
+.description {
+    margin-top: 0.5rem;
+    line-height: 1.375rem;
+}
+
+.signInButton {
+    composes: root_normalPriority from '~@magento/venia-ui/lib/components/Button/button.module.css';
+    min-height: auto;
+    min-width: auto;
+    padding: 0.25rem 2rem;
+}
+
+.checkoutContent {
+    display: grid;
+    gap: 2rem;
+    padding: 0 1rem;
+    background: var(--am-osc-content-background);
+}
+
+.checkoutContent_hidden {
+    display: none;
+}
+
+.signInContainer {
+    align-items: center;
+    border: 2px solid rgb(var(--venia-global-color-gray-400));
+    border-radius: 0.375rem;
+    display: grid;
+    gap: 1rem;
+    grid-auto-flow: column;
+    padding: 1rem;
+}
+
+.topBlock {
+    background: #fff;
+    padding: 0 var(--am-osc-content-paddig);
+    margin: 0 calc(var(--am-osc-content-paddig) * -1);
+}
+
+.disabledGuest {
+    composes: contentContainer from '~@magento/venia-ui/lib/components/CheckoutPage/GuestSignIn/guestSignIn.module.css';
+}
+
+.disabledGuest > button {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .root {
+        padding: 2.5rem 2rem;
+    }
+
+    .checkoutContent {
+        padding: 0 1.5rem;
+    }
+}

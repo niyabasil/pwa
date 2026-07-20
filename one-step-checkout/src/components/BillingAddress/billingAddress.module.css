@@ -1,0 +1,18 @@
+.root {
+    position: relative;
+}
+
+.billing_address_fields_root {
+    composes: root from '../ShippingInformation/AddressForm/addressForm.css';
+}
+
+.billing_address_fields_root_hidden {
+    overflow: hidden;
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+}
+
+.formErrorContainer {
+    padding-top: 1.5rem;
+}

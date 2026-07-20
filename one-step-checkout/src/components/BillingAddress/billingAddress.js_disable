@@ -1,0 +1,11 @@
+import React, { useCallback, useMemo } from 'react';
+
+
+const BillingAddress = props => {
+    return  <div className={"test"}>
+
+        {'haiii'}
+    </div>
+};
+
+export default BillingAddress;

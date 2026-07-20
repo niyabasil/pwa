@@ -1,0 +1,34 @@
+.root {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.innerRoot {
+    composes: root;
+}
+
+.accordion {
+    padding: 0.5rem 0;
+}
+
+.accordion > div {
+    border-bottom-width: 1px;
+    border-color: rgb(var(--venia-global-color-border));
+}
+
+.accordion > div > button > span {
+    padding: 0.5rem 0;
+    height: auto;
+}
+
+.accordion > div > button > span > span {
+    font-size: var(--venia-typography-body-M-fontSize);
+}
+
+.accordion > div button + div {
+    padding: 0 0 1rem 0;
+}
+
+.accordion > div form button {
+    min-width: 3rem;
+}

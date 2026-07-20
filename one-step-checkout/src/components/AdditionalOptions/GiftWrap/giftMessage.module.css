@@ -1,0 +1,8 @@
+.root + .root {
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+}
