@@ -31,6 +31,6 @@ type AmPromoBanner @doc(description: "A single Amasty Promo Banner rule.") {
     banner_title: String @doc(description: "Alt / title text for the banner image.")
     html_text: String @doc(description: "Raw HTML content (for type=html).")
     cms_block: String @doc(description: "CMS block identifier (for type=cms).")
-    positions: [Int] @doc(description: "List of position codes where this banner is displayed.")
+    positions: [Int] @doc(description: "List of position codes where this banner is displayed. 0=Above Cart, 1=Sidebar Additional, 2=Sidebar Main, 3=Product Page Top, 4=Category Page Top, 5=Category Page Bottom, 6=Product Page Bottom, 7=Product Page Below Cart, 8=Cart Below Total, 9=Search Top, 10=On Top of Page, 11=Home Page under Menu, 12=Product Page Right, 13=Product Page Left, 14=Among Products, 15=Category Below Add to Cart, 16=Home Page Top.")
     sort_order: Int @doc(description: "Banner sort order (higher value = higher priority).")
 }

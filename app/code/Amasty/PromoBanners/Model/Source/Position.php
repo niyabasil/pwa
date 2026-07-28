@@ -31,7 +31,8 @@ class Position implements ArrayInterface
             Rule::POS_CATALOG_SEARCH_TOP => __('Catalog Search (Top)'),
             Rule::POS_TOP_PAGE => __('On Top of Page'),
             Rule::POS_TOP_INDEX => __('Home Page under Menu'),
-            Rule::POS_AMONG_PRODUCTS => __('Among Category Products')
+            Rule::POS_AMONG_PRODUCTS => __('Among Category Products'),
+            Rule::POS_HOME_TOP => __('Home Page (Top)')
         ];
     }
 

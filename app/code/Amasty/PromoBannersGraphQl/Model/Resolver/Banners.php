@@ -26,7 +26,7 @@ class Banners implements ResolverInterface
      * Positions that require explicit page context are listed per page type below.
      */
     private const PAGE_POSITIONS = [
-        'HOME'     => [Rule::POS_TOP_INDEX, Rule::POS_TOP_PAGE],
+        'HOME'     => [Rule::POS_HOME_TOP, Rule::POS_TOP_INDEX, Rule::POS_TOP_PAGE],
         'CATEGORY' => [Rule::POS_CATEGORY_PAGE, Rule::POS_CATEGORY_PAGE_BOTTOM,
                        Rule::POS_CATEGORY_PAGE_BELOW_ADD_TO_CART, Rule::POS_AMONG_PRODUCTS,
                        Rule::POS_SIDEBAR_LEFT, Rule::POS_SIDEBAR_RIGHT, Rule::POS_TOP_PAGE],
