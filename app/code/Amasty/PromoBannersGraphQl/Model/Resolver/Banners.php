@@ -81,7 +81,8 @@ class Banners implements ResolverInterface
         }
 
         $storeId     = (int)$this->storeManager->getStore()->getId();
-        $currentTime = $this->timezone->date();
+        // Format as a plain string so MySQL can compare against stored date values.
+        $currentTime = $this->timezone->date()->format('Y-m-d H:i:s');
 
         /** @var \Amasty\PromoBanners\Model\ResourceModel\Rule\Collection $collection */
         $collection = $this->ruleCollectionFactory->create();
