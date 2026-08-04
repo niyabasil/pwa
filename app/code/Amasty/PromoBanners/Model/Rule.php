@@ -29,6 +29,8 @@ class Rule extends \Magento\Rule\Model\AbstractModel
     public const POS_AMONG_PRODUCTS = 14;
     public const POS_CATEGORY_PAGE_BELOW_ADD_TO_CART = 15;
 
+    public const POS_HOME_TOP = 16;
+
     /*
      * Display Types
      */
