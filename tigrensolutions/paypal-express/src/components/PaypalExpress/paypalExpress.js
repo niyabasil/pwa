@@ -34,7 +34,8 @@ const PaypalExpress = props => {
         payment,
         onError,
         loadedScript,
-        handleLoadScript
+        handleLoadScript,
+        isCheckoutReady
     } = usePaypalExpress({
         ...props
     });
@@ -85,7 +86,17 @@ const PaypalExpress = props => {
     return (
         <div className={classes.root}>
             {loading && fullPageLoadingIndicator}
-            <div id="paypal-express" style={inlineStyle} />
+            <div className={classes.paypalButtonWrapper}>
+                <div id="paypal-express" style={inlineStyle} />
+                {!isCheckoutReady && (
+                    <div className={classes.paypalOverlay}>
+                        <p className={classes.paypalOverlayMessage}>
+                            Please complete your shipping address and select a
+                            shipping method before using PayPal.
+                        </p>
+                    </div>
+                )}
+            </div>
             {errorMessage && (
                 <div className={classes.error}>
                     <p>{errorMessage}</p>
