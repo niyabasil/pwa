@@ -26,7 +26,7 @@ export const useAsyncAddressForm = (props = {}) => {
     const [{ cartId }] = useCartContext();
     const [
         { checkoutFields, shouldSubmit },
-        { setIsUpdating, setSectionError, setSectionCompleted }
+        { setIsUpdating, setSectionError, setSectionCompleted, resetSectionCompleted }
     ] = useAmOscContext();
 
     const setError = useCallback(error => setSectionError([FORM_KEY, error]), [
@@ -125,6 +125,13 @@ export const useAsyncAddressForm = (props = {}) => {
             debouncedFormChange(formValues);
         }
     };
+
+    // Register ADDRESS_FORM as not-done on mount so isDoneMap always contains
+    // it, preventing the race where isAllSectionDone passes while ADDRESS_FORM
+    // is absent from the map (and the MOCKED_ADDRESS is still on the cart).
+    useEffect(() => {
+        resetSectionCompleted(FORM_KEY);
+    }, [resetSectionCompleted]);
 
     useEffect(() => {
         if (shouldSubmit) {
