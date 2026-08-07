@@ -123,17 +123,26 @@ export const usePaypalExpress = props => {
             return;
         }
         try {
-            await updateBillingAddress({
-                variables: {
-                    cartId,
-                    sameAsShipping: true
-                }
-            });
+            // Step 1: Set PayPal payment method first.
+            // Magento uses the token + payerID to fetch the customer's shipping
+            // address from PayPal's API and stores it on the cart.
             await updatePaymentMethod({
                 variables: {
                     cartId,
                     token: data.paymentToken,
                     payerID: data.payerID
+                }
+            });
+            // Step 2: Now set billing address as same_as_shipping.
+            // The shipping address is already populated from PayPal's response
+            // above, so this correctly copies it into the billing address.
+            // Previously this ran BEFORE updatePaymentMethod, which caused
+            // billing/shipping address to appear as dashes in the Magento
+            // backend for customers who had no prior shipping address on cart.
+            await updateBillingAddress({
+                variables: {
+                    cartId,
+                    sameAsShipping: true
                 }
             });
         } catch (error) {
